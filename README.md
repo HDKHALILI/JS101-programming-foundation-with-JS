@@ -1,0 +1,1 @@
+# This repository contains the lessons and exercises of Launch School's JS101 Programming Foundation with JavaScript
