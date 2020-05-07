@@ -1,21 +1,3 @@
-// Formula: m = p * (j / (1 - Math.pow((1 + j),(-n))));
-// m = monthly payment
-// p = loan amount
-// j = monthly interest rate
-// n = loan duration in months
-
-// ask the user for loan amount, APR and loan duration
-// calculate the monthly repayment using formula
-// show the user the result
-
-// START
-// SET loanAmount = GET loan amount
-// SET apr = GET apr
-// SET loadDuration = GET load duration
-// SET monthlyRepayment = loanAmount * (apr / (1 - Math.pow((1 + apr), (-n))))
-// PRINT monthlyRepayment
-// END
-
 const readline = require('readline-sync');
 
 function prompt(message) {
@@ -23,34 +5,52 @@ function prompt(message) {
 }
 
 function invalidNumber(number) {
-  return number.trimStart() === '' || Number.isNaN(Number(number));
+  return number.trim() === '' ||
+    Number(number) < 0 ||
+    Number.isNaN(Number(number));
 }
 
 prompt("Welcome to Mortgage Calculator!");
 
+while (true) {
+  prompt(`*${'-'.repeat(50)}*`);
+  prompt("Enter Loan Amount");
+  let amount = readline.question('> ');
+  while (invalidNumber(amount)) {
+    prompt("Please enter a correct value");
+    amount = readline.question('> ');
+  }
 
-prompt("Enter Loan Amount");
-let loanAmount = readline.question('> ');
-while (invalidNumber(loanAmount)) {
-  prompt("Please enter a correct value");
-  loanAmount = readline.question('> ');
+  prompt("Enter the interest rate\n [5 for 5% or 2.5 for 2.5%]");
+  let interestRate = readline.question('> ');
+  while (invalidNumber(interestRate)) {
+    prompt("Please enter a correct value [5 for 5%");
+    interestRate = readline.question('> ');
+  }
+
+  prompt("Enter the Loan Duration (in months)");
+  let duration = readline.question('> ');
+  while (invalidNumber(duration)) {
+    prompt("Please enter a correct value [60 for 5 years]");
+    duration = readline.question('> ');
+  }
+
+  let anualInterestRate = Number(interestRate) / 100;
+  let monthlyInterestRate = anualInterestRate / 12;
+
+
+  let monthlyRepayment = Number(amount) *
+    (monthlyInterestRate /
+      (1 - Math.pow((1 + monthlyInterestRate), (-Number(duration)))));
+
+  console.log(`Monthly Repayment: $${monthlyRepayment.toFixed(2)}`);
+
+  prompt("Do you want to calculate again?");
+  let answer = readline.question('> ').toLowerCase();
+  while (!answer.startsWith('n') && !answer.startsWith('y')) {
+    prompt("Please enter yes(y) or no(n)");
+    answer = readline.question('> ');
+  }
+
+  if (answer.toLowerCase().startsWith('n')) break;
 }
-
-prompt("Enter the Anual Percentage Rate (APR) [5 for 5%]");
-let apr = readline.question('> ');
-while (invalidNumber(apr)) {
-  prompt("Please enter a correct value [5 for 5%");
-  apr = readline.question('> ');
-}
-// let mpr = (apr / 100) / 12;
-
-prompt("Enter the Loan Duration in months");
-let duration = readline.question('> ');
-while (invalidNumber(duration)) {
-  prompt("Please enter a correct value [60 for 5 years]");
-  duration = readline.question('> ');
-}
-
-let monthlyRepayment = loanAmount * (mpr / (1 - Math.pow((1 + mpr), (-duration))));
-
-console.log(`Monthly Repayment: $${monthlyRepayment.toFixed(2)}`);
