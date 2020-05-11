@@ -1,21 +1,22 @@
 // Variable Scopes
 // A variable's scope is the part of the program that can access that
-// variable by name. -- this is true for all programming languages
+// variable by name. -- this is true for all programming languages.
 // Specifically, variable scoping rules describe how and where the language
 // finds and retrieves values from previously declared variables.
 
 // In JavaScript, there are two different types of scope: global and local
 
 // Global Scope - available everywhere in the program
-let name = 'Julian';
+let name = 'Julian'; // declared in global scope
 console.log(name);
 
 for (let counter = 0; counter < 3; counter += 1) {
+  // access from inside a block
   console.log(name);
 }
 
 console.log(name);
-// name is globally scoped, which means that it is available for use
+// 'name' is globally scoped, which means that it is available for use
 // anywhere in the program --- globally or from inside a function or block
 // NOTE: there is subtle difference to global scope when you compare
 // JavaScript in Browser and JavaScript in Node.js.
@@ -35,6 +36,7 @@ console.log(name);
 // --- Variables declared in an outer scope can be accessed in an inner scope,
 //      but not vice versa
 
+// Rules of function scopes
 // Rule 1: outer scope variables can be accessed by the inner scope
 // outer scope
 let a = 1;
@@ -49,7 +51,7 @@ logA();
 console.log(a); // => 2;
 // The above example demonstrate two things:
 // 1 - inner scope can access outer scope variables.
-// 2 - youles can change variables from an inner scope and have that change
+// 2 - you can change variables from an inner scope and have that change
 //     affect the outer scope.
 
 // Rule 2: inner scope variables cannot be accessed in outer scope.
@@ -81,7 +83,7 @@ funcB();
 
 // Rule 4: nested functions have their own variable scope
 // Nested functions follow the same rules of inner and outer scoped variables.
-// when dealing with functions, out usage of what's 'outer' or 'inner' is
+// when dealing with functions, our usage of what's 'outer' or 'inner' is
 // going to be relative. we will use 'first level', 'second level' and so on
 let a = 1; // first level variables
 
@@ -113,3 +115,46 @@ let number = 10;
 // Variable Shadowing: a local variable that has the same name as a variable
 // in the outer scope - the inner scope variable prevents access to the
 // outer scope variable
+
+// ------------
+// Block Scope
+// In JavaScript, bloks are segments of code statements grouped by opening
+// and closing curly braces ({}).
+// Constructs like 'if/else' and the 'for' and 'while' loops define new
+// block scopes.
+// The rules for block scopes are indentical to those for function scopes.
+// 1. Outer blocks cannot access variables from inner scopes.
+// 2. Inner blocks can access variables from outer scopes.
+// 3. Variables defined in an inner block can shadow variables from outer scopes.
+
+if (true) {
+  let a = 'foo';
+}
+
+console.log(a); // => ReferenceError
+
+let n = 12;
+if (true) {
+  console.log(n); // => 12
+}
+
+function aFunc() {
+  let a = 'foo';
+
+  if (true) {
+    let b = 'bar';
+    console.log(a); // => 'foo'
+
+    if (true) {
+      let c = 'baz';
+    }
+
+    console.log(a); // => 'foo'
+    console.log(b); // => 'bar'
+    console.log(c); // => ReferenceError
+  }
+
+  console.log(a); // => 'foo'
+  console.log(b); // => ReferenceError - stop execution
+  console.log(c); // => will not reach this line, if did => RefereceError
+}
