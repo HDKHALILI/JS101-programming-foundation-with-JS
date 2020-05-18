@@ -26,7 +26,7 @@ let object = { a: 1, b: 2, c: 3 };
 // specifically the value of property 'c'
 // the + operator returns a new primitive value that will be assigned
 // to the property 'c'
-object.c = object.c + 1;
+object.c = object.c += 1;
 console.log(object); // => { a: 1, b: 2, c: 4 }
 
 // -------- Key Points
