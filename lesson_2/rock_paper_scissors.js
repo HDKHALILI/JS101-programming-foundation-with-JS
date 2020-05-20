@@ -41,10 +41,10 @@ function displayWinner(choice, computerChoice, results, messages) {
   for (let index = 0; index < results.length; index += 1) {
     if (choice === results[index][0] &&
       results[index].slice(1).includes(computerChoice)) {
-      return `*** You Win! *** ${messages[choice][computerChoice]}`.bold.green;
+      return `${messages[choice][computerChoice]} *** You Win! ***`.bold.green;
     } else if (computerChoice === results[index][0] &&
       results[index].slice(1).includes(choice)) {
-      return `*** Computer Win! *** ${messages[computerChoice][choice]}`.bold.red;
+      return `${messages[computerChoice][choice]} *** Computer Win! ***`.bold.red;
     }
   }
   return "*** It's a tie ***".bold.bgBlue;
