@@ -1,6 +1,12 @@
 const readline = require('readline-sync');
 const colors = require('colors');
-const VALID_CHOICES = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
+const VALID_CHOICES = {
+  r: 'rock',
+  sc: 'scissors',
+  p: 'paper',
+  sp: 'spock',
+  l: 'lizard'
+};
 const RESULTS = [
   ['rock', 'scissors', 'lizard'],
   ['scissors', 'paper', 'lizard'],
@@ -51,17 +57,23 @@ function displayWinner(choice, computerChoice, results, messages) {
 }
 
 while (true) {
-  prompt(`Choose one: ${VALID_CHOICES.join(', ')}`);
+  let choiceMessage = Object.keys(VALID_CHOICES).map(key => {
+    return `[${key}/${VALID_CHOICES[key]}]`;
+  });
+  prompt(`Choose one: ${choiceMessage.join(', ')}`);
   let choice = readline.question('> ');
 
-  while (!VALID_CHOICES.includes(choice)) {
+  let shortChoices = Object.keys(VALID_CHOICES);
+  let longChoices = Object.values(VALID_CHOICES);
+  while (!shortChoices.includes(choice) && !longChoices.includes(choice)) {
     prompt("That's not a valid choice".red);
     choice = readline.question('> ');
   }
 
-  let randomIndex = Math.floor(Math.random() * VALID_CHOICES.length);
-  let computerChoice = VALID_CHOICES[randomIndex];
+  let randomIndex = Math.floor(Math.random() * longChoices.length);
+  let computerChoice = longChoices[randomIndex];
 
+  choice = choice.length > 2 ? choice : VALID_CHOICES[choice];
   prompt(displayWinner(choice, computerChoice, RESULTS, MESSAGES));
 
   prompt('Do you want to play again (y/n)?');
@@ -73,6 +85,6 @@ while (true) {
 
   if (answer[0] !== 'y') break;
 
-  let lineLength = `Choose one: ${VALID_CHOICES.join(', ')}`.length;
+  let lineLength = `Choose one: ${choiceMessage.join(', ')}`.length;
   prompt(colors.green(`${'-'.repeat(lineLength)}`));
 }
