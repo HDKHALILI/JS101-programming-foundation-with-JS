@@ -7,53 +7,61 @@ const VALID_CHOICES = {
   sp: 'spock',
   l: 'lizard'
 };
-const RESULTS = [
-  ['rock', 'scissors', 'lizard'],
-  ['scissors', 'paper', 'lizard'],
-  ['paper', 'rock', 'spock'],
-  ['spock', 'rock', 'scissors'],
-  ['lizard', 'paper', 'spock']
-];
-const MESSAGES = {
+
+const OUTCOMES = {
   rock: {
-    scissors: "Rock crushed the Scissors",
-    lizard: "Rock crushed the Lizard"
+    beats: ['scissors', 'lizard'],
+    messages: {
+      scissors: "Rock crushed the Scissors",
+      lizard: "Rock crushed the Lizard"
+    }
   },
   scissors: {
-    paper: "Scissors cut the Paper",
-    lizard: "Scissors decaptitated the Lizard"
+    beats: ['paper', 'lizard'],
+    messages: {
+      paper: "Scissors cut the Paper",
+      lizard: "Scissors decaptitated the Lizard"
+    }
   },
   paper: {
-    rock: "Paper covered the Rock",
-    spock: "Paper disproved Spock"
+    beats: ['rock', 'spock'],
+    messages: {
+      rock: "Paper covered the Rock",
+      spock: "Paper disproved Spock"
+    }
   },
   spock: {
-    rock: "Spock vaporized the Rock",
-    scissors: "Spock smashed the Scissors"
+    beats: ['rock', 'scissors'],
+    messages: {
+      rock: "Spock vaporized the Rock",
+      scissors: "Spock smashed the Scissors"
+    }
   },
   lizard: {
-    paper: "Lizard ate the Paper",
-    spock: "Lizard poisoned Spock"
+    beats: ['paper', 'spock'],
+    messages: {
+      paper: "Lizard ate the Paper",
+      spock: "Lizard poisoned Spock"
+    }
   }
-
 };
 
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
-function displayWinner(choice, computerChoice, results, messages) {
+function displayWinner(choice, computerChoice, results) {
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
-  for (let index = 0; index < results.length; index += 1) {
-    if (choice === results[index][0] &&
-      results[index].slice(1).includes(computerChoice)) {
-      return `${messages[choice][computerChoice]} *** You Win! ***`.bold.green;
-    } else if (computerChoice === results[index][0] &&
-      results[index].slice(1).includes(choice)) {
-      return `${messages[computerChoice][choice]} *** Computer Win! ***`.bold.red;
-    }
+  let message;
+  if (results[choice].beats.includes(computerChoice)) {
+    message = results[choice].messages[computerChoice];
+    return `${message} *** You Win! ***`.bold.green;
+  } else if (results[computerChoice].beats.includes(choice)) {
+    message = results[computerChoice].messages[choice];
+    return `${message} *** Computer Win! ***`.bold.red;
+  } else {
+    return "*** It's a tie ***".bold.bgBlue;
   }
-  return "*** It's a tie ***".bold.bgBlue;
 }
 
 let userWin = 0;
@@ -77,7 +85,7 @@ while (true) {
   let computerChoice = longChoices[randomIndex];
 
   choice = choice.length > 2 ? choice : VALID_CHOICES[choice];
-  let result = displayWinner(choice, computerChoice, RESULTS, MESSAGES);
+  let result = displayWinner(choice, computerChoice, OUTCOMES);
   prompt(result);
 
   if (result.includes('You')) {
@@ -95,7 +103,7 @@ while (true) {
   }
 
   prompt(`Your win: ${userWin}`.green);
-  prompt(`Computer win: ${computerWin}`.red);
+  prompt(`Computer's win: ${computerWin}`.red);
 
   prompt('Do you want to play again (y/n)?');
   let answer = readline.question('> ');
