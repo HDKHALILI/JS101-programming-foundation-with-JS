@@ -56,6 +56,9 @@ function displayWinner(choice, computerChoice, results, messages) {
   return "*** It's a tie ***".bold.bgBlue;
 }
 
+let userWin = 0;
+let computerWin = 0;
+
 while (true) {
   let choiceMessage = Object.keys(VALID_CHOICES).map(key => {
     return `[${key}/${VALID_CHOICES[key]}]`;
@@ -74,7 +77,25 @@ while (true) {
   let computerChoice = longChoices[randomIndex];
 
   choice = choice.length > 2 ? choice : VALID_CHOICES[choice];
-  prompt(displayWinner(choice, computerChoice, RESULTS, MESSAGES));
+  let result = displayWinner(choice, computerChoice, RESULTS, MESSAGES);
+  prompt(result);
+
+  if (result.includes('You')) {
+    userWin += 1;
+  } else if (result.includes('Computer')) {
+    computerWin += 1;
+  }
+
+  if (userWin >= 5) {
+    prompt('*** GAME OVER! ***\n*** YOU WIN! ***'.bold.green);
+    break;
+  } else if (computerWin >= 5) {
+    prompt('*** GAME OVER! ***\n*** COMPUTER WIN! ***'.bold.red);
+    break;
+  }
+
+  prompt(`Your win: ${userWin}`.green);
+  prompt(`Computer win: ${computerWin}`.red);
 
   prompt('Do you want to play again (y/n)?');
   let answer = readline.question('> ');
