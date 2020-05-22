@@ -8,7 +8,7 @@ const VALID_CHOICES = {
   l: 'lizard'
 };
 
-const OUTCOMES = {
+const RESULTS = {
   rock: {
     beats: ['scissors', 'lizard'],
     messages: {
@@ -64,6 +64,9 @@ function displayWinner(choice, computerChoice, results) {
   }
 }
 
+prompt("Welcome to rock paper scissors spock lizard.".bold.green);
+prompt("Play with computer. Whoever wins 5 games first wins the game".green);
+
 let userWin = 0;
 let computerWin = 0;
 
@@ -72,20 +75,20 @@ while (true) {
     return `[${key}/${VALID_CHOICES[key]}]`;
   });
   prompt(`Choose one: ${choiceMessage.join(', ')}`);
-  let choice = readline.question('> ');
+  let choice = readline.question('> ').toLowerCase();
 
   let shortChoices = Object.keys(VALID_CHOICES);
   let longChoices = Object.values(VALID_CHOICES);
   while (!shortChoices.includes(choice) && !longChoices.includes(choice)) {
     prompt("That's not a valid choice".red);
-    choice = readline.question('> ');
+    choice = readline.question('> ').toLowerCase();
   }
 
   let randomIndex = Math.floor(Math.random() * longChoices.length);
   let computerChoice = longChoices[randomIndex];
 
   choice = choice.length > 2 ? choice : VALID_CHOICES[choice];
-  let result = displayWinner(choice, computerChoice, OUTCOMES);
+  let result = displayWinner(choice, computerChoice, RESULTS);
   prompt(result);
 
   if (result.includes('You')) {
@@ -106,7 +109,7 @@ while (true) {
   prompt(`Computer's win: ${computerWin}`.red);
 
   prompt('Do you want to play again (y/n)?');
-  let answer = readline.question('> ');
+  let answer = readline.question('> ').toLowerCase();
   while (answer[0] !== 'n' && answer[0] !== 'y') {
     prompt('Please enter "y" or "n".');
     answer = readline.question('> ').toLowerCase();
