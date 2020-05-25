@@ -50,73 +50,114 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+function playerWin(choice, computerChoice, results) {
+  return results[choice].beats.includes(computerChoice);
+}
+
 function displayWinner(choice, computerChoice, results) {
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
   let message;
-  if (results[choice].beats.includes(computerChoice)) {
+  if (playerWin(choice, computerChoice, results)) {
     message = results[choice].messages[computerChoice];
-    return `${message} *** You Win! ***`.bold.green;
-  } else if (results[computerChoice].beats.includes(choice)) {
+    prompt(`${message} *** You Win! ***`.bold.green);
+  } else if (playerWin(computerChoice, choice, results)) {
     message = results[computerChoice].messages[choice];
-    return `${message} *** Computer Win! ***`.bold.red;
+    prompt(`${message} *** Computer Win! ***`.bold.red);
   } else {
-    return "*** It's a tie ***".bold.bgBlue;
+    prompt("*** It's a tie ***".bold.bgBlue);
   }
 }
 
-prompt("Welcome to rock paper scissors spock lizard.".bold.green);
-prompt("Play with computer. Whoever wins 5 games first wins the game".green);
+function getPlayerChoice(message) {
+  prompt(`Choose one: ${message.join(', ')}`);
+  return readline.question('> ').toLowerCase();
+}
 
-let userWin = 0;
-let computerWin = 0;
+function getComputerChoice(choices) {
+  let randomIndex = Math.floor(Math.random() * choices.length);
+  return choices[randomIndex];
+}
 
-while (true) {
-  let choiceMessage = Object.keys(VALID_CHOICES).map(key => {
-    return `[${key}/${VALID_CHOICES[key]}]`;
+function invalidPlayerChoice(choice, shortChoices, longChoices) {
+  return !shortChoices.includes(choice) && !longChoices.includes(choice);
+}
+
+function displayScore(scores) {
+  prompt(`Your score: ${scores.user}`.green);
+  prompt(`Computer score: ${scores.computer}`.red);
+}
+
+function getInstruction(choices) {
+  return Object.keys(choices).map(key => {
+    return `[${key}/${choices[key]}]`;
   });
-  prompt(`Choose one: ${choiceMessage.join(', ')}`);
-  let choice = readline.question('> ').toLowerCase();
+}
 
-  let shortChoices = Object.keys(VALID_CHOICES);
-  let longChoices = Object.values(VALID_CHOICES);
-  while (!shortChoices.includes(choice) && !longChoices.includes(choice)) {
-    prompt("That's not a valid choice".red);
-    choice = readline.question('> ').toLowerCase();
+function incrementScores(choice, computerChoice, results, scores) {
+  if (playerWin(choice, computerChoice, results)) {
+    scores.user += 1;
+  } else if (playerWin(computerChoice, choice, results)) {
+    scores.computer += 1;
   }
+}
 
-  let randomIndex = Math.floor(Math.random() * longChoices.length);
-  let computerChoice = longChoices[randomIndex];
-
-  choice = choice.length > 2 ? choice : VALID_CHOICES[choice];
-  let result = displayWinner(choice, computerChoice, RESULTS);
-  prompt(result);
-
-  if (result.includes('You')) {
-    userWin += 1;
-  } else if (result.includes('Computer')) {
-    computerWin += 1;
-  }
-
-  if (userWin >= 5) {
-    prompt('*** GAME OVER! ***\n*** YOU WIN! ***'.bold.green);
-    break;
-  } else if (computerWin >= 5) {
-    prompt('*** GAME OVER! ***\n*** COMPUTER WIN! ***'.bold.red);
-    break;
-  }
-
-  prompt(`Your win: ${userWin}`.green);
-  prompt(`Computer's win: ${computerWin}`.red);
-
+function playAgain() {
   prompt('Do you want to play again (y/n)?');
   let answer = readline.question('> ').toLowerCase();
   while (answer[0] !== 'n' && answer[0] !== 'y') {
     prompt('Please enter "y" or "n".');
     answer = readline.question('> ').toLowerCase();
   }
+  return answer[0];
+}
 
-  if (answer[0] !== 'y') break;
-
-  let lineLength = `Choose one: ${choiceMessage.join(', ')}`.length;
+function printDivider(instruction) {
+  let lineLength = `Choose one: ${instruction.join(', ')}`.length;
   prompt(colors.green(`${'-'.repeat(lineLength)}`));
+}
+
+function clearScreen() {
+  console.clear();
+}
+
+const scores = {
+  user: 0,
+  computer: 0
+};
+
+prompt("Welcome to rock paper scissors spock lizard.".bold.green);
+prompt("Play with computer. Whoever wins 5 games first wins the game".green);
+
+while (true) {
+  let instruction = getInstruction(VALID_CHOICES);
+  let shortChoices = Object.keys(VALID_CHOICES);
+  let longChoices = Object.values(VALID_CHOICES);
+  let playerChoice = getPlayerChoice(instruction);
+  let computerChoice = getComputerChoice(longChoices);
+
+  while (invalidPlayerChoice(playerChoice, shortChoices, longChoices)) {
+    prompt("That's not a valid choice".red);
+    playerChoice = getPlayerChoice(instruction);
+  }
+  clearScreen();
+
+  playerChoice = playerChoice.length > 2 ?
+    playerChoice : VALID_CHOICES[playerChoice];
+
+  displayWinner(playerChoice, computerChoice, RESULTS);
+  incrementScores(playerChoice, computerChoice, RESULTS, scores);
+  displayScore(scores);
+
+  if (scores.user >= 5) {
+    prompt('*** GAME OVER! ***\n*** YOU WIN!***'.bold.green);
+    break;
+  } else if (scores.computer >= 5) {
+    prompt('*** GAME OVER! ***\n*** COMPUTER WIN! ***'.bold.red);
+    break;
+  }
+
+  if (playAgain() !== 'y') break;
+  clearScreen();
+  displayScore(scores);
+  printDivider(instruction);
 }

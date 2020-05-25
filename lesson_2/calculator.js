@@ -74,6 +74,6 @@ while (calculate) {
   let answer = readline.question('> ');
   if (!answer.toLowerCase().startsWith('y')) {
     prompt('goodBye');
-    break;
+    calculate = false;
   }
 }
