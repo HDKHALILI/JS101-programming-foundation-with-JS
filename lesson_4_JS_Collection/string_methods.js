@@ -1,4 +1,4 @@
-// JavaScript's strings aren't really a collection since you can store generic
+// JavaScript's strings aren't really a collection since you can't store generic
 // data in them. You can think of it as a collection of characters; they have
 // properties that one would associate with collections.
 // For example you can access individual characters or multiple characters
