@@ -205,4 +205,50 @@ Exiting the loop from the middle instead of beginning or end
   }
 ```
 
-NOTE: we can use the `break` statement in any `while`, `do/while` or `for` loop; you aren't restricted to using it only in `while(true)` loops
+NOTE: we can use the `break` statement in any `while`, `do/while` or `for` loop; you aren't restricted to using it only in `while(true)` loops. It will not work with array abstraction methods like `forEach`.
+
+#### continue and Guard Clauses
+
+Recap: The `break` statement lets us terminate a loop at any time.
+
+`continue` statement provides similar service like `break`, but instead of terminating the loop, it terminates the current iteration and returns to the top of the loop.
+
+Example: display squares of all even numbers in an array:
+
+```javascript
+  let numbers = [1, 4, 3, 7, 6, 5, 2, 1];
+
+  for (let index = 0; index < numbers.length; index += 1) {
+    if (numbers[index] % 2 === 0) {
+      let square = numbers[index] * numbers[index];
+      console.log(square);
+    }
+  }
+```
+
+The above code is simple but can be improved.
+
+Issues wuth the code:
+- the nested logic is a little hard to understand than unnested logic would be.
+- It doesn't make it clear that the loop has no interest in the odd numbers.
+
+One way to deal with this issue is to use a **guard clause** to exclude the odd numbers from further consideration:
+
+```javascript
+  let numbers = [1, 4, 3, 7, 6, 5, 2, 1];
+  for (let index = 0; index < numbers.length; index += 1) {
+    // not interested in odd numbers
+    if (numbers[index] % 2 === 1) {
+      continue;
+    }
+
+    let square = numbers[index] * numbers[index];
+    console.log(square);
+  }
+```
+
+A **guard clause** is conditional statement that protects the body of the loop or function from having to deal with values it doesn't need to handle.
+
+For the most part gaurd clauses always include a `continue`, `break`, or `return` statement in the body of the `if`, depending on need. Most shouldn't do anything else, but that is not a strict rule.
+
+Note: `continue` doesn't restart the loop. Instead it ends the current iteration and starts the next.
