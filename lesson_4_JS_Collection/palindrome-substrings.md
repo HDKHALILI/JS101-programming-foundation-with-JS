@@ -21,11 +21,11 @@ Rules:
      * Explicit Requirnments:
       - return all substrings that are palindrome.
        (palindrome: word that reads the same forward and backward)
-      - Palindrome are case sensiti
+      - Palindrome are case sensitive
 
 Data Structure:
 
-    Output: arr
+    Output: array
 
 ## Algorithm:
 
@@ -34,7 +34,7 @@ Data Structure:
   - create an empty array called `result` that will contain all of the required substrings
   - declare a variable `startSubstrIndex` and assign 0 to it.
   - declare a variable `endSubstrIndex` and assign value of `startSubstrIndex + 2` to it.
-  - Enter loop which will break when `startSubstrIndex` is equal to `str.length`
+  - Enter loop which will break when `startSubstrIndex` is equal to `str.length - 1` (`str.length - 1` because there can be no substrings of at least 2 characters that begin with the last letter)
     - Winthin that loop enter anonther loop that will break if `endSubstrIndex` is equal to `str.length`
       - append to the result array part of the string from `startSubstrIndex` to `endSubstrIndex`
       - increment `endSubstrIndex` by 1.
