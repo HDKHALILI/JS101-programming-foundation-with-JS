@@ -3,7 +3,8 @@ Using loops like `for` and `while` to iterate over a collection is repetitive. J
 
 Unfortunately, other collections and *collection-like* types like an object and strings don't have these methods. But we can convert them to arrays and then use these methods.
 
-&nbsp;  
+&nbsp;
+
 **`Array.prototype.forEach`**
 => always returns undefined (even if you explicitly return something from the callback)
 
@@ -34,6 +35,8 @@ Using `forEach` we can simplify it greatly, but achieve the same result.
   })
 ```
 
+&nbsp;
+
 **`forEach` with Strings**
 
 Strings doesn't have a `forEach` method. We can convert String to array using `String.prototype.split` method. In this example we want to process every character in the string:
@@ -47,9 +50,11 @@ Strings doesn't have a `forEach` method. We can convert String to array using `S
 
 We can use this approach with other array methods too.
 
+&nbsp;
+
 **`forEach` with Objects**
 
-Object doesn't have `forEach`, we can use `Object.keys`, `Object.values`, and `Object.etries` function to readily convert objects into arrays.
+Object doesn't have `forEach`, we can use `Object.keys`, `Object.values`, and `Object.entries` function to readily convert objects into arrays.
 
 Iterating over all values of an object:
 ```javascript
@@ -106,7 +111,6 @@ We can get all of the key-value pairs of an object with `Object.entries`
 &nbsp;
 
 **`Array.prototype.filter`**
-
 => returns new array (doesn't mutate its caller)
 
 Allows us to **select** or **filter** certain elements from an array so that we can work with them separately from other elements. --> Reduce complexity --> reduce bugs
@@ -143,7 +147,7 @@ We can use `filter`:
 
 **Note: truthy and falsy aren't values that belong to a specific JavaScript type but are simply a classification of which values JavaScript recognises as representing truth or falsity.**
 
-Question now is whether we can effectively use `filter` to select certain key-value pairs from an object. Let's see:
+Can we effectively use `filter` to select certain key-value pairs from an object? Let's see:
 
 ```javascript
   let produce = {
@@ -236,13 +240,15 @@ Let's look at another example (no explicit return, and we are not using arrow fu
   });
   // => [undefined, undefined, undefined]
 ```
-Here the callback returns undefined (we do not tell it what to return). `map` returns array of the same length of `undefined`.
+Here the callback returns `undefined` (we do not tell it what to return). `map` returns array of `undefined`.
+
+&nbsp;
 
 `filter` and `map` with Strings
 
 Finding all the vowels:
 
-`split` to make array from strings
+`split` to make array from string
 
 `filter` to select only vowels
 
