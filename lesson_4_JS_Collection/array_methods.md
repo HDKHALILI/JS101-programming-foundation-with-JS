@@ -264,8 +264,8 @@ Methods like `forEach`, `filter`, and `map` are provided by JavaScript to allow 
 
 Method Reference:
 
-|**Method** | **Action** | **Considers the return value of the callback"** | **Returns a new array from the method?** | **Length of the returned array** |
-|---|---|---|---|---|
+|**Method** | **Action** | **Considers the return value of the callback?** | **Returns a new array from the method?** | **Length of the returned array** |
+|:---|:---|:---|:---|:---|
 |`forEach`| Iteration | No | No, it returns `undefined` | N/A
 |`filter` | Selection/Filtering | Yes, its truthiness | Yes | Length of original or less |
 |`mpa`| Transformation | Yes | Yes | Length of original|
