@@ -24,7 +24,7 @@ Using `forEach` we can simplify it greatly, but achieve the same result.
     console.log(number);
   })
 ```
-`forEach` takes a **callback** function as an argument. At each iteration it passes the current value to the callback function as the first argument. It also passes index position as the second argument and we can capture it like this: (the callback doesn't have to use those arguments if it doesn't need them)
+`forEach` takes a **callback** function as an argument. At each iteration it passes the value of current element to the callback function as the first argument. It also passes index position as the second argument and we can capture it like this: (the callback doesn't have to use those arguments if it doesn't need them)
 
 ```javascript
   [1, 2, 3].forEach((number, index) => {
@@ -100,3 +100,104 @@ We can get all of the key-value pairs of an object with `Object.entries`
   //  broccoli is a Vegetable
 ```
 
+**`Array.prototype.filter`**
+Allows us to **select** or **filter** certain elements from an array so that we can work with them separately from other elements. --> Reduce complexity --> reduce bugs
+
+We can perform selection using regular `for` or `while` loop:
+```javascript
+  let numbers = [1, 2, 3];
+  let oddNumbers = [];
+
+  for (let index = 0; index < numbers.length; index += 1) {
+    if (numbers[index] % 2 === 1) {
+      oddNumbers.push(numbers[index]);
+    }
+  }
+  
+  console.log(oddNumbers); // => [1, 3]
+```
+
+We can use `filter`:
+```javascript
+  let oddNumbers = [1, 2, 3].filter(num => num % 2 === 1);
+  console.log(oddNumbers); // => [1, 3]
+```
+
+`filter` takes a callback function as its argument. At each iteration it passes the value of current element to the callback. It selects the element based on the return value of the callback. If it is truthy (not any of these: `undefined`, `null`, `NaN`, `0`, `''`, and `false`) the element will be selected otherwise, not selected. This means you need to pay special attention to the return value of the callback.
+
+```javascript
+  // no element will be selected because callback is not explicitly returning
+  // implicit return will be undefined --> falsy
+  [1, 3, 3].filter(num => {
+    num % 2 === 1;
+  });
+```
+
+**Note: truthy and falsy aren't values that belong to a specific JavaScript type but are simply a classification of which values JavaScript recognises as representing truth or falsity.**
+
+Question now is whether we can effectively use `filter` to select certain key-value pairs from an object. Let's see:
+
+```javascript
+  let produce = {
+    apple: 'Fruit',
+    carrot: 'Vegetable',
+    pear: 'Fruit',
+    broccoli: 'Vegetable'
+  };
+
+  let produceKeyValues = Object.entries(produce);
+  let onlyVegetables = produceKeyValues.filter(keyValue => {
+    let [key, value] = keyValue;
+    return value === 'Vegetable';
+  });
+
+  console.log(onlyVegetables); // => [['carrot', 'Vegetable'], ['broccoli', 'Vegetable']]
+```
+
+It works, but it gives us array which isn't ideal. Maybe we can use `forEach` to convert it to object.
+```javascript
+  let produce = {
+    apple: 'Fruit',
+    carrot: 'Vegetable',
+    pear: 'Fruit',
+    broccoli: 'Vegetable'
+  };
+
+  let produceKeyValues = Object.entries(produce);
+  let onlyVegetablesArr = produceKeyValues.filter(keyValue => {
+    let [key, value] = keyValue;
+    return value === 'Vegetable';
+  });
+
+  let onlyVegetables = {};
+
+  onlyVegetablesArr.forEach(keyValue => {
+    let [key, value] = keyValue;
+    onlyVegetables[key] = value
+  })
+  console.log(onlyVegetables); // => [carrot: 'Vegetable', broccoli: 'Vegetable']
+```
+
+It works but the logic is complicated, let's use `forEach` by itself without using `filter` at all.
+```javascript
+  let produce = {
+    apple: 'Fruit',
+    carrot: 'Vegetable',
+    pear: 'Fruit',
+    broccoli: 'Vegetable'
+  };
+
+  let produceKeyValues = Object.entries(produce);
+  let onlyVegetables = {};
+
+  produceKeyValues.forEach(keyValue => {
+    let [key, value] = keyValue;
+    if (value === 'Vegetable') {
+      onlyVegetables[key] = value;
+    }
+  });
+
+  console.log(onlyVegetables); // => {carrot: 'Vegetable', broccoli: 'Vegetable'}
+```
+
+Now that's much better. As it turns out `forEach` by itself is much better choice than `forEach` and `filter` combined for filtering object.
