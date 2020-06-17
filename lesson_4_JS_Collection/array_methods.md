@@ -3,6 +3,7 @@ Using loops like `for` and `while` to iterate over a collection is repetitive. J
 
 Unfortunately, other collections and *collection-like* types like an object and strings don't have these methods. But we can convert them to arrays and then use these methods.
 
+&nbsp;  
 **`Array.prototype.forEach`**
 => always returns undefined (even if you explicitly return something from the callback)
 
@@ -34,6 +35,7 @@ Using `forEach` we can simplify it greatly, but achieve the same result.
 ```
 
 **`forEach` with Strings**
+
 Strings doesn't have a `forEach` method. We can convert String to array using `String.prototype.split` method. In this example we want to process every character in the string:
 
 ```javascript
@@ -46,6 +48,7 @@ Strings doesn't have a `forEach` method. We can convert String to array using `S
 We can use this approach with other array methods too.
 
 **`forEach` with Objects**
+
 Object doesn't have `forEach`, we can use `Object.keys`, `Object.values`, and `Object.etries` function to readily convert objects into arrays.
 
 Iterating over all values of an object:
@@ -100,6 +103,7 @@ We can get all of the key-value pairs of an object with `Object.entries`
   //  pear is a Fruit
   //  broccoli is a Vegetable
 ```
+&nbsp;
 
 **`Array.prototype.filter`**
 
@@ -206,8 +210,9 @@ It works but the logic is complicated, let's use `forEach` by itself without usi
 
 Now that's much better. As it turns out `forEach` by itself is much better choice than `forEach` and `filter` combined for filtering object.
 
-**`Array.prototype.map`**
+&nbsp;
 
+**`Array.prototype.map`**
 => returns new array of the same size as caller(doesn't mutate its caller)
 
 As with `filter`, `map` also considers the return value of the callback. The main difference between these two methods is that `map` uses the return value of the callback to perform transformation instead of selection.
@@ -258,6 +263,8 @@ We can use `map` to duplicate every character in a string:
      . join('');
   // => "WWhhaatt''ss  uupp,, DDoocc??"
 ```
+
+&nbsp;
 
 ## Summery
 Methods like `forEach`, `filter`, and `map` are provided by JavaScript to allow for simpler implementations of common collection manipulation tasks. Using these methods to iterate, select and transform a collection is preferred over manually looping.
