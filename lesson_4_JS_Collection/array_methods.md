@@ -4,6 +4,7 @@ Using loops like `for` and `while` to iterate over a collection is repetitive. J
 Unfortunately, other collections and *collection-like* types like an object and strings don't have these methods. But we can convert them to arrays and then use these methods.
 
 **`Array.prototype.forEach`**
+=> always returns undefined (even if you explicitly return something from the callback)
 
 So far we have used loops to iterate over array, like this:
 ```javascript
@@ -101,6 +102,9 @@ We can get all of the key-value pairs of an object with `Object.entries`
 ```
 
 **`Array.prototype.filter`**
+
+=> returns new array (doesn't mutate its caller)
+
 Allows us to **select** or **filter** certain elements from an array so that we can work with them separately from other elements. --> Reduce complexity --> reduce bugs
 
 We can perform selection using regular `for` or `while` loop:
@@ -201,3 +205,56 @@ It works but the logic is complicated, let's use `forEach` by itself without usi
 ```
 
 Now that's much better. As it turns out `forEach` by itself is much better choice than `forEach` and `filter` combined for filtering object.
+
+**`Array.prototype.map`**
+
+=> returns new array of the same size as caller(doesn't mutate its caller)
+
+As with `filter`, `map` also considers the return value of the callback. The main difference between these two methods is that `map` uses the return value of the callback to perform transformation instead of selection.
+
+```javascript
+  [1, 2, 3].map(num => num * 2);
+  // => [2, 4, 6]
+```
+
+Let's consider callback that doesn't transform:
+```javascript
+  [1, 2, 3].map(num => num % 2 === 1);
+  // => [true, false, true]
+```
+The callback's return value is a boolean and `map` returns an array of boolean.
+
+Let's look at another example (no explicit return, and we are not using arrow function's implicit return):
+```javascript
+  [1, 2, 3].map(num => {
+    num * 2;
+  });
+  // => [undefined, undefined, undefined]
+```
+Here the callback returns undefined (we do not tell it what to return). `map` returns array of the same length of `undefined`.
+
+`filter` and `map` with Strings
+
+Finding all the vowels:
+
+`split` to make array from strings
+
+`filter` to select only vowels
+
+`join` to make string from array
+```javascript
+  let str = "What's up, Doc?";
+  str.split('')
+     .filter(char => 'aeiou'.includes(char.toLowerCase()))
+     .join('');
+  // => 'aeo'
+```
+
+We can use `map` to duplicate every character in a string:
+```javascript
+  let str = "What's up, Doc?";
+  str.split('')
+     .map(char => char + char)
+     . join('');
+  // => "WWhhaatt''ss  uupp,, DDoocc??"
+```
