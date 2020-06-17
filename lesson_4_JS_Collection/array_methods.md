@@ -258,3 +258,16 @@ We can use `map` to duplicate every character in a string:
      . join('');
   // => "WWhhaatt''ss  uupp,, DDoocc??"
 ```
+
+## Summery
+Methods like `forEach`, `filter`, and `map` are provided by JavaScript to allow for simpler implementations of common collection manipulation tasks. Using these methods to iterate, select and transform a collection is preferred over manually looping.
+
+Method Reference:
+
+|**Method** | **Action** | **Considers the return value of the callback"** | **Returns a new array from the method?** | **Length of the returned array** |
+|---|---|---|---|---|
+|`forEach`| Iteration | No | No, it returns `undefined` | N/A
+|`filter` | Selection/Filtering | Yes, its truthiness | Yes | Length of original or less |
+|`mpa`| Transformation | Yes | Yes | Length of original|
+
+These methods each use the callback's return value in different ways. In the case of `forEach`, the return value of the callback is ignored.
