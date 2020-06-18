@@ -97,3 +97,40 @@ If you don't want to mutate the original array, use `Array.prototype.slice` to m
   console.log(nums); // => [1, 2, 3, 4, 5]
   console.log(reversedNums); // => [5, 4, 3, 2, 1]
 ```
+&nbsp;
+***
+&nbsp;
+**`Array.prototype.includes`** &nbsp; => returns a boolean  
+"Does this array have the thing (argument) I am looking for"  
+`includes` takes an argument (not callback) that it looks for in the array that it's called on. Returns `true` if it finds it else returns `false`  
+```javascript
+  [2, 1, 3].includes(1); // => true
+
+  [2, 1, 3].includes(5); // => false
+```
+
+**Using `includes` to check for an object with in array**  
+```javascript
+  let arr = ['a', 'b', { c: 'foo' }];
+  arr.includes({ c: 'foo' }); // => false
+```
+Why does it return `false`? Includes uses `===` operator to compare its argument with elements of the array. `{ c: 'foo' } === { c: 'foo' }` is `false` because they look identical but are not the same object. If we compare the same object we will get `true`
+```javascript
+  let obj = { c: 'foo' };
+  let arr = ['a', 'b', obj];
+
+  arr.includes(obj); // true (because we are comparing the same object)
+```
+As with so many array methods, `includes` is useful when working with objects.  
+Let's check if a certain key exist in an object:
+```javascript
+  let obj = { a: 'apple', b: 'banana', c: 'custard' };
+  Object.keys(obj).includes('c'); // true
+  Object.keys(obj).includes('f'); // => false
+```
+We can also use `Object.prototype.hasOwnProperty` to check if a key exist in an object
+```javascript
+  let obj = { a: 'apple', b: 'banana', c: 'custord' };
+  obj.hasOwnProperty('c'); // => true
+  obj.hasOwnProperty('f'); // => false
+```
