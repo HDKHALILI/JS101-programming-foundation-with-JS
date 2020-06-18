@@ -77,3 +77,23 @@ When callback doesn't return truth value for any of the elements, `findIndex` re
   [2, 1, 4, 3, 5].findIndex(num => num < 1);
   // => -1 (no match)
 ```
+&nbsp;
+***
+&nbsp;
+**`Array.prototype.reverse`** &nbsp; => returns the reversed array  
+"I will reverse the original array in place for you, be aware the array will change."  
+`reverse` reverses the elements of the array it is called on. The first element becomes the last, and the last becomes the first. Note: it reverse in place (mutates the array).
+```javascript
+  let nums = [1, 2, 3, 4, 5];
+  nums.reverse();
+  console.log(nums);
+  // => [5, 4, 3, 2, 1]
+```
+If you don't want to mutate the original array, use `Array.prototype.slice` to make a copy and then reverse.
+```javascript
+  let nums = [1, 2, 3, 4, 5];
+  let reversedNums = nums.slice().reverse();
+
+  console.log(nums); // => [1, 2, 3, 4, 5]
+  console.log(reversedNums); // => [5, 4, 3, 2, 1]
+```
