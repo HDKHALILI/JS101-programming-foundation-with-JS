@@ -28,3 +28,23 @@ The `Object.keys`, `Object.values`, and `Object.entries` methods will help you u
 &nbsp;
 ***
 &nbsp;
+**`Array.prototype.every`** &nbsp; => returns a boolean  
+"Does the callback function returns true for all the elements in the array".  
+Returns true if the callback's return value in every iteration is truthy.
+```javascript
+  [1, 2, 3].every(num => num > 2);
+  // => false (all of them are not greater than 2)
+
+  [3, 4, 5].every(num => num > 2);
+  // => true (all are greater than 2)
+```
+
+Using `every` with object:
+```javascript
+  let animals = { a: 'ant', b: 'bear', c: 'cat' };
+  Object.values(animals).every(animalName => animalName.length > 2);
+  // true
+```
+&nbsp;
+***
+&nbsp;
