@@ -30,7 +30,7 @@ The `Object.keys`, `Object.values`, and `Object.entries` methods will help you u
 &nbsp;
 **`Array.prototype.every`** &nbsp; => returns a boolean  
 "Does the callback function returns true for all the elements in the array".  
-Returns true if the callback's return value in every iteration is truthy.
+`every` returns true if the callback's return value in every iteration is truthy.
 ```javascript
   [1, 2, 3].every(num => num > 2);
   // => false (all of them are not greater than 2)
@@ -48,3 +48,17 @@ Using `every` with object:
 &nbsp;
 ***
 &nbsp;
+**`Array.prototype.find`** &nbsp; => returns an element or `undefined`  
+"Give me the first element for which the callback returns truthy value"  
+`find` takes a callback function as an argument and returns the first element for which the callback returns a truthy value.
+```javascript
+ // give me the first number that is greater than 2
+  [2, 1, 4, 3, 5].find(num => num > 2);
+  // => 4 (is the first element that is greater than 2)
+```
+`3` and `5` also satisfy the condition, but `find` stops looking once it finds a matching element.  
+If the callback doesn't return a truthy value for any element, `find` rturns `undefined`
+```javascript
+  [2, 1, 4, 3, 5].find(num => num < 1);
+  // => undefined
+```
