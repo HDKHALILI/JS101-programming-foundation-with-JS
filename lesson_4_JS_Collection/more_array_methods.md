@@ -62,3 +62,18 @@ If the callback doesn't return a truthy value for any element, `find` rturns `un
   [2, 1, 4, 3, 5].find(num => num < 1);
   // => undefined
 ```
+&nbsp;
+***
+&nbsp;
+**`Array.prototype.findIndex`** &nbsp; => returns an index position or -1.  
+"Give me the index of the first element for which the callback returns truthy value."  
+`findIndex` functions like `find` except it returns the index of the element for which the callback returns a truthy value.
+```javascript
+  [2, 1, 4, 3, 5].findIndex(num => num > 2);
+  // => 2 (index of 4 is 2)
+```
+When callback doesn't return truth value for any of the elements, `findIndex` returns `-1`
+```javascript
+  [2, 1, 4, 3, 5].findIndex(num => num < 1);
+  // => -1 (no match)
+```
