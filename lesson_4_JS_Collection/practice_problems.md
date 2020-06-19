@@ -31,3 +31,14 @@ The following code differs slightly from the above code. What is the return valu
 ```
 Return value => `[1, 4, 9]`  
 When the arrow function is used this (`num => num * num`) way (with out `{}`), JavaScript uses the computed value as the return value.
+
+***
+
+**Practice Problem 4**  
+What is the return value of the following statement? Why?
+```javascript
+  ['ant', 'bear', 'caterpillar'].pop().length;
+  // 11
+```
+Return value => `11`  
+`pop` removes the last element of the array (mutates array) and returns it. `pop().length` returns the length of the removed element, in this case `"caterpillar".length` which is 11.
