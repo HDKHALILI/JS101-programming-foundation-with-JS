@@ -42,3 +42,19 @@ What is the return value of the following statement? Why?
 ```
 Return value => `11`  
 `pop` removes the last element of the array (mutates array) and returns it. `pop().length` returns the length of the removed element, in this case `"caterpillar".length` which is 11.
+
+***
+
+**Practice Problem 5**  
+What is the callback's return value in the following code? Also, what is the return value of `every` in this code?
+```javascript
+  [1, 2, 3].every(num => {
+    return num = num * 2;
+  });
+  // => 2
+  // => 4
+  // => 6
+  // => true
+```
+Return value => `2 4 6 true`  
+At each iteration the callback returns the return value of expression `num = num * 2` which will be `2, 4, 6`. The return value of all iteration is truthy therefor, `every` returns `true`.
