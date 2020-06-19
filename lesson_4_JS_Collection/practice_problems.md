@@ -106,3 +106,21 @@ Write a program that uses this array to create an object where the names are the
   console.log(obj);
   // => { Fred: 0, Barney: 1, Wilma: 2, Betty: 3, Pebbles: 4, Bambam: 5}
 ```
+
+***
+
+**Practice Problem 9**  
+Add up all of the ages from the Munster family object:
+```javascript
+  let ages = {
+    Herman: 32,
+    Lily: 30,
+    Grandpa: 5843,
+    Eddie: 10,
+    Marilyn: 22,
+    Spot: 237
+  }
+
+  let totalAges = Object.values(ages).reduce((ageSum, currentAge) => ageSum + currentAge, 0);
+  console.log(totalAges); // => 6174
+```
