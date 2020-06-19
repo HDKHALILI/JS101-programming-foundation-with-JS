@@ -5,5 +5,18 @@ What is the return value of `filter` method call below? Why?
 ```javascript
   [1, 2, 3].filter(num => 'hi'); // => [1, 2, 3]
 ```
-The return value is => `[1, 2, 3]`  
+The return value => `[1, 2, 3]`  
 `filter` perform selection based on the truthiness of the callback's return value. Since the return value `hi` is always truthy, `filter` returns a new array containing all the elements from the original array.
+
+***
+
+**Practice Problem 2**  
+What is the return value of `map` in the following code? Why?
+```javascript
+  [1, 2, 3].map(num => {
+    num * num;
+  });
+  // => [undefined, undefined, undefined]
+```
+The return values => `[undefined, undefined, undefined]`  
+`map` fills the array with the return value of the callback. In this case the callback doesn't have an explicit return statement, which means the implicit return value of it is `undefined`. So `map` returns a new array of the same size filled with `undefined`.
