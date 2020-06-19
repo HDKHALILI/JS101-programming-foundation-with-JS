@@ -69,3 +69,19 @@ How does `Array.prototype.fill` work? Is it destructive? How can we find out?
 ```
 `fill` method changes all elements in an array to a given value from start index (default is `0`) to an end index (default is `array.length`). It returns the modified array.  
 `fill` is a destructive method. We can find out using the documentation or checking in Node REPL.
+
+***
+
+**Practice Problem 7**  
+What is the return value of `map` in the following code? Why?
+```javascript
+  ['ant', 'bear'].map(elem => {
+    if (elem.length > 3) {
+      return elem;
+    }
+  });
+  // => [undefined, 'bear']
+  // no explicit return statement --> implicit return value is undefined
+```
+Return value => `[undefined, 'bear']`  
+The callback only has explicit return statement for elements with length greater than 3.The first element doesn't satisfy the condition, with the absence of explicit return statement the return value is `undefined`. The second element does satisfy the condition and the element (`'bear'`) is returned.
