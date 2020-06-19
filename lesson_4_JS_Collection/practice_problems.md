@@ -85,3 +85,24 @@ What is the return value of `map` in the following code? Why?
 ```
 Return value => `[undefined, 'bear']`  
 The callback only has explicit return statement for elements with length greater than 3.The first element doesn't satisfy the condition, with the absence of explicit return statement the return value is `undefined`. The second element does satisfy the condition and the element (`'bear'`) is returned.
+
+***
+
+**Practice Problem 8**  
+Take a look at the following array.
+```javascript
+  let flintstones = ["Fred", "Barney", "Wilma", "Betty", "Pebbles", "Bambam"];
+```
+Write a program that uses this array to create an object where the names are the keys and the values are the positions in the array.
+```javascript
+  { Fred: 0, Barney: 1, Wilma: 2, Betty: 3, Pebbles: 4, Bambam: 5}
+```
+```Javascript
+  let flintstones = ["Fred", "Barney", "Wilma", "Betty", "Pebbles", "Bambam"];
+  let obj = {}
+  flintstones.forEach((name, index) => {
+    obj[name] = index
+  });
+  console.log(obj);
+  // => { Fred: 0, Barney: 1, Wilma: 2, Betty: 3, Pebbles: 4, Bambam: 5}
+```
