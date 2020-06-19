@@ -58,3 +58,14 @@ What is the callback's return value in the following code? Also, what is the ret
 ```
 Return value => `2 4 6 true`  
 At each iteration the callback returns the return value of expression `num = num * 2` which will be `2, 4, 6`. The return value of all iteration is truthy therefor, `every` returns `true`.
+
+***
+
+**Practice Problem 6**  
+How does `Array.prototype.fill` work? Is it destructive? How can we find out?
+```javascript
+  let arr = [1, 2, 3, 4, 5];
+  arr.fill(1, 1, 5);
+```
+`fill` method changes all elements in an array to a given value from start index (default is `0`) to an end index (default is `array.length`). It returns the modified array.  
+`fill` is a destructive method. We can find out using the documentation or checking in Node REPL.
