@@ -124,3 +124,32 @@ Add up all of the ages from the Munster family object:
   let totalAges = Object.values(ages).reduce((ageSum, currentAge) => ageSum + currentAge, 0);
   console.log(totalAges); // => 6174
 ```
+
+***
+
+**Practice Problem 10**  
+Pick out the minimum age from our current Muster family object:
+```javascript
+  let ages = {
+    Herman: 32,
+    Lily: 30,
+    Grandpa: 5843,
+    Eddie: 10,
+    Marilyn: 22,
+    Spot: 237
+  }
+
+  // Using Math.min
+  // let minAge = Math.min(...Object.values(ages));
+
+  // Using loop
+  let agesArray = Object.values(ages);
+  let minAge = agesArray[0];
+  agesArray.forEach(age => {
+    if (minAge > age) {
+      minAge = age;
+    }
+    
+  });
+  console.log(minAge); // 10
+```
