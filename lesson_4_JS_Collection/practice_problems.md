@@ -20,3 +20,14 @@ What is the return value of `map` in the following code? Why?
 ```
 The return values => `[undefined, undefined, undefined]`  
 `map` fills the array with the return value of the callback. In this case the callback doesn't have an explicit return statement, which means the implicit return value of it is `undefined`. So `map` returns a new array of the same size filled with `undefined`.
+
+***
+
+**Practice Problem 3**  
+The following code differs slightly from the above code. What is the return value of `map` in this case? Why?
+```javascript
+  [1, 2, 3].map(num => num * num);
+  // => [1, 4, 9]
+```
+Return value => `[1, 4, 9]`  
+When the arrow function is used this (`num => num * num`) way (with out `{}`), JavaScript uses the computed value as the return value.
