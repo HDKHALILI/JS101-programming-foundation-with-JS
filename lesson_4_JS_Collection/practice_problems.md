@@ -153,3 +153,30 @@ Pick out the minimum age from our current Muster family object:
   });
   console.log(minAge); // 10
 ```
+
+***
+
+**Practice Problem 11**  
+Create an object that expresses the frequency with which each letter occurs in this string:
+```javascript
+  let statement = "The Flintstones Rock";
+  let letterFrequency = {};
+  statement.split('').forEach(char => {
+    if (letterFrequency.hasOwnProperty(char) && char !== ' ') {
+      letterFrequency[char] += 1;
+    } else if (char !== ' ') {
+      letterFrequency[char] = 1;
+    }
+  });
+  console.log(letterFrequency);
+
+  // using plain loop
+  let charFrequency = {}
+  for (let index = 0; index < statement.length; index += 1) {
+    let char = statement[index];
+    if (char === ' ') continue;
+
+    charFrequency[char] = charFrequency[char] || 0;
+    charFrequency[char] += 1;
+  }
+```
