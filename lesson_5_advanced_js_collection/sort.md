@@ -130,4 +130,4 @@ Sorting subarrays. Here `score` is an array subarrays that each contain 3 elemen
   // => [ [1, 4, 2], [3, 6, 4], [6, 8, 9] ]
 ```
 
-**NOTE:** Using one letter parameters (`a` and `b`) in a callback for `sort` is a common convention, even though it confilicts with the style rules that says you shouldn't use sing-character variable name. In this it is ok.
+**NOTE:** Using one letter parameters (`a` and `b`) in a callback for `sort` is a common convention, even though it confilicts with the style rules that says you shouldn't use singl-character variable name. In this case it is ok.
