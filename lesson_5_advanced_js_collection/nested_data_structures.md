@@ -135,3 +135,83 @@ It produces the same result as modifying `a` directly.
 `arr[0][1] = 8` is equivelent to `a[1] = 8`  
 Let's see that in the diagram:
 ![variable-as-pointers-2](variables-as-pointers-2.png)
+
+&nbsp;
+
+## **Shallow Copy**
+Copying only the top level of an object. When the object contains other objects, like nested array, then those objects are shared not copied.
+
+## Shallow Copying Arrays:
+Using `Array.prototype.slice()` without arguments:
+```javascript
+  let arr = ['a', 'b', 'c'];
+  let copyOfArray = arr.slice();
+  console.log(copyOfArr); // => [ 'a', 'b', 'c' ]
+```
+Using es6 **spread syntax (...)**:
+```javascript
+  let arr = ['a', 'b', 'c'];
+  // ... expand an array to a list of values
+  let copyOfArray = [...arr];
+  console.log(copyOfArray); // => [ 'a', 'b', 'c' ]
+```
+Nested arrays:
+```javascript
+  let arr = [['a'], ['b'], ['c']];
+  let copyOfArray = arr.slice();
+
+  // this will update arr[1] too
+  copyOfArray[1].push('d');
+
+ // See:
+  console.log(arr); // => [ [ 'a' ], [ 'b', 'd' ], [ 'c' ]]
+  console.log(copyOfArray); // => [ [ 'a' ], [ 'b', 'd' ], [ 'c' ]]
+```
+Both `arr` and `copyOfArray` share the nested arrays. We can remove or add more elements to `arr` and `copyOfArray` without affecting one another. But the change in the shared arrays will be refelected by both.
+
+&nbsp;
+
+## Shallow Copying Object:
+We can use `Object.assign` to copy properties of one or more objects into another.
+```javascript
+  let obj1 = { a: 'a' }
+  let obj2 = { b: 'b' }
+  
+  Object.assign(obj1, obj2);
+  console.log(obj1); // => { a: 'a', b: 'b' }
+```
+
+Copying into a new object:
+```javascript
+  let obj = { a: 'ant', b: 'bear' };
+  let copyOfObj = Object.assign({}, obj);
+
+  copyOfObj.c = 'cat';
+  console.log(obj); // => { a: 'ant', b: 'bear' }
+  console.log(copyOfObj); // => { a: 'ant', b: 'bear', c: 'cat' }
+```
+
+## Deep Copy
+There is no method in JavaScript for deep copy. But there is an indirect way. However, it only works with nested arrays and plain objects. Objects that have methods and complex objects like dates or custom objects cannot be deep cloned.
+
+```javascript
+  let arr = [{ a: 'ant' }, ['bar']];
+  let serialisedArr = JSON.stringify(arr);
+  let deepCoppiedArr - JSON.parse(serialisedArr);
+```
+
+## Freezing Objects
+You can freez objects, meaning make it unmodifiable. How ever this only freezes the top level objects not the nested ones.
+
+```javascript
+  let obj - Object.freeze({ a: 'ant' });
+  let arr = Object.freeze(['a', 'b' , 'c']);
+
+  obj['b'] = 'bear'; // fails silently
+  console.log(obj); // => { a: 'ant' }
+
+  arr.push('d'); // => TypeError: Cannot add property 3, object is not extensible
+  console.log(arr); // => [ 'a', 'b', 'c' ]
+```
+
+NOTE: Only mutable object can be frozen with `Object.freeze`.
