@@ -24,3 +24,39 @@ Let's get integer `3` from the inner array:
 ![nested inner array element diagram](nested-inner-array-element-diagram.png)
 
 &nbsp;
+
+## **Updating collection elements**
+
+**Update array element:**
+```javascript
+  let arr = [[1, 3], [2]];
+  // parmanently changed the value of element at index 1
+  arr[1] = 'hi there';
+  arr; // => [ [1, 3], 'hi there' ]
+```
+
+**Modify a value in nested array:**
+```javascript
+  let arr = [[1, 3], [2]]
+  // changing value in nested array is the same
+  arr[0][1] = 5;
+  // [ [1, 5], [2] ]
+```
+Let's see what is happening:  
+`arr[0][1] = 5` is a chained action, first part is element reference and second part is element assignment  
+Element Reference: `arr[0]` which gives us: `[1, 3]`  
+Element Assignment: `[1] = 5` which changed the second element of the referenced element to `5`.
+
+**Add aditional element into an inner array:**
+```javascript
+  let arr = [[1], [2]];
+
+  arr[0].push(3);
+  console.log(arr);
+  // => [ [1, 3], [2] ]
+
+  // we can add any value like another array
+  arr[0].push([4]);
+  console.log(arr);
+  // => [ [ 1, 3, [ 4 ] ], [2] ] (three layer nested data structure)
+```
