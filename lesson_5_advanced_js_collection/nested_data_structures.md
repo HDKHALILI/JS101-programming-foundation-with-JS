@@ -60,3 +60,41 @@ Element Assignment: `[1] = 5` which changed the second element of the referenced
   console.log(arr);
   // => [ [ 1, 3, [ 4 ] ], [2] ] (three layer nested data structure)
 ```
+
+&nbsp;
+
+## **Other nested structures**
+
+Objects can be nested within arrays as well:
+
+```javascript
+  [{ a: 'ant' }, { b: 'bear' }];
+```
+![array of objects](array-of-hashes.png)
+
+**Let's add new/key value pair to the first inner object:**  
+Once again there has to be a two step process:  
+1. reference the first element of the array
+2. update the object
+
+```javascript
+  let arr = [{ a: 'ant' }, { b: 'bear' }];
+
+  arr[0]['c'] = 'cat';
+  arr[0].d = 'dog'
+  console.log(arr);
+  // => [{ a: 'ant', c: 'cat', d: 'dog' }, { b: 'bear' }]
+```
+
+**Arrays can hold multiple different objects at the same time, including nested data structures:**
+```javascript
+  let arr = [['a', ['b']], { b: 'bear', c: 'cat' }, 'cab'];
+
+  // Let's retrieve elements
+  arr[0]; // => [ 'a', [ 'b' ] ]
+  arr[0][1][0]; // => 'b'
+  arr[1]; // => { b: 'bear', c: 'cat' }
+  arr[1]['b']; // => 'bear'
+  arr[1].b[1]; // => 'e'
+  arr[2][1]; // => 'a'
+```
