@@ -98,3 +98,40 @@ Once again there has to be a two step process:
   arr[1].b[1]; // => 'e'
   arr[2][1]; // => 'a'
 ```
+
+&nbsp;
+
+## **Variable reference for a nested collections**
+Let's have a look at this code:
+```javascript
+  let a = [1, 3];
+  let b = [2];
+  let arr = [a, b];
+  console.log(arr); // => [ [ 1, 3 ], [ 2 ] ]
+```
+The local variables `a` and `b` are pointing to Array object. When we place the local variables as elements in an array, the result looks the same as adding the actual Array objects to which they refer to the array.
+
+What happens when we change the local variables or the elements of the array?
+```javascript
+  let a = [1, 3];
+  let b = [2];
+  let arr = [a, b];
+  console.log(arr); // => [ [ 1, 3 ], [ 2 ] ]
+
+  a[1] = 5;
+  console.log(arr); // => [ [ 1, 5 ], [ 2 ] ]
+```
+The above code shows the change is seen in both value of `a` and element at index `0` off `arr`. This means that both `a` and `arr[0]` points to the same array.
+
+![variable as pointer](variables-as-pointers-1.png)
+
+Now if modify the first element in the array:
+```javascript
+  arr[0][1] = 8;
+  console.log(arr); // => [ [ 1, 8 ], [ 2 ] ]
+  console.log(a); // => [ 1, 8 ]
+```
+It produces the same result as modifying `a` directly.  
+`arr[0][1] = 8` is equivelent to `a[1] = 8`  
+Let's see that in the diagram:
+![variable-as-pointers-2](variables-as-pointers-2.png)
