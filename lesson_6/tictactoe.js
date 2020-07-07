@@ -5,6 +5,7 @@ const HUMAN_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
 
 function displayBoard(board) {
+  console.clear();
   console.log('');
   console.log('     |     |');
   console.log(`  ${board['1']}  |  ${board['2']}  |  ${board['3']}`);
@@ -45,6 +46,12 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+function emptySquares(board) {
+  return Object.keys(board).filter(key => {
+    return board[key] === INITIAL_MARKER;
+  });
+}
+
 function playerChoosesSquare(board) {
   let square; // declared here so we can use it outside the loop
 
@@ -52,7 +59,7 @@ function playerChoosesSquare(board) {
     prompt(`Choose a square (${emptySquares(board).join(', ')}):`);
     square = readline.question().trim();
 
-    if (emptySquares.includes(square)) break;
+    if (emptySquares(board).includes(square)) break;
 
     prompt("Sorry, that's not a valid choice.");
   }
@@ -67,16 +74,21 @@ function computerChoosesSquare(board) {
   board[square] = COMPUTER_MARKER;
 }
 
-function emptySquares(board) {
-  return Object.keys(board).filter(key => {
-    return board[key] === INITIAL_MARKER;
-  });
+function boardFull(board) {
+  return emptySquares(board).length === 0;
+}
+
+function someoneWon(board) {
+  return false;
 }
 
 let board = initialiseBoard();
 displayBoard(board);
 
-playerChoosesSquare(board);
-displayBoard(board);
-playerChoosesSquare(board);
-displayBoard(board);
+while (true) {
+  playerChoosesSquare(board);
+  computerChoosesSquare(board);
+  displayBoard(board);
+
+  if (someoneWon(board) || boardFull(board)) break;
+}
