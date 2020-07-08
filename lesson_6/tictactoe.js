@@ -117,6 +117,12 @@ function someoneWon(board) {
   return !!detectWinner(board);
 }
 
+function updateScores(scores, winner) {
+  if (winner) {
+    scores[winner.toLowerCase()] += 1;
+  }
+}
+
 while (true) {
   let board = initialiseBoard();
 
@@ -132,8 +138,15 @@ while (true) {
 
   displayBoard(board);
 
+  let scores = {
+    player: 0,
+    computer: 0,
+  };
+
   if (someoneWon(board)) {
-    prompt(`${detectWinner(board)} won!`);
+    let winner = detectWinner(board);
+    prompt(`${winner} won!`);
+    updateScores(scores, winner);
   } else {
     prompt("It's a tie!");
   }
