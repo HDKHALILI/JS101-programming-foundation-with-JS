@@ -3,6 +3,7 @@ const readline = require("readline-sync");
 const INITIAL_MARKER = " ";
 const HUMAN_MARKER = "X";
 const COMPUTER_MARKER = "O";
+const WINNING_GAME_NUMBER = 5;
 
 function displayBoard(board) {
   console.clear();
@@ -123,35 +124,72 @@ function updateScores(scores, winner) {
   }
 }
 
-while (true) {
-  let board = initialiseBoard();
-
-  while (true) {
-    displayBoard(board);
-
-    playerChoosesSquare(board);
-    if (someoneWon(board) || boardFull(board)) break;
-
-    computerChoosesSquare(board);
-    if (someoneWon(board) || boardFull(board)) break;
+function gameWinner(scores) {
+  if (scores.player > scores.computer) {
+    return "Player";
+  } else if (scores.computer > scores.player) {
+    return "Computer";
   }
 
-  displayBoard(board);
+  return null;
+}
 
+function displayScores(scores) {
+  let message = `Player Score: ${scores.player}, Computer Score: ${scores.computer}`;
+  prompt(message);
+}
+
+function palyAgain(message) {
+  prompt(message);
+  return readline.question().toLowerCase()[0];
+}
+
+while (true) {
   let scores = {
     player: 0,
     computer: 0,
   };
 
-  if (someoneWon(board)) {
-    let winner = detectWinner(board);
-    prompt(`${winner} won!`);
-    updateScores(scores, winner);
-  } else {
-    prompt("It's a tie!");
+  while (true) {
+    let board = initialiseBoard();
+
+    while (true) {
+      displayBoard(board);
+      displayScores(scores);
+
+      playerChoosesSquare(board);
+      if (someoneWon(board) || boardFull(board)) break;
+
+      computerChoosesSquare(board);
+      if (someoneWon(board) || boardFull(board)) break;
+    }
+
+    displayBoard(board);
+
+    if (someoneWon(board)) {
+      let winner = detectWinner(board);
+      updateScores(scores, winner);
+      prompt(`${winner} won!`);
+      displayScores(scores);
+    } else {
+      prompt("It's a tie!");
+    }
+
+    if (
+      scores.player < WINNING_GAME_NUMBER &&
+      scores.computer < WINNING_GAME_NUMBER
+    ) {
+      let answer = palyAgain("Play another game? (y or n)");
+      if (answer !== "y") {
+        prompt(`${gameWinner(scores)} Won the Match!`);
+        break;
+      }
+    } else {
+      prompt(`${gameWinner(scores)} Won the Match!`);
+      break;
+    }
   }
 
-  prompt("Play again? (y or n)");
-  let answer = readline.question().toLowerCase()[0];
-  if (answer !== "y") break;
+  let answer = palyAgain("Play another match? (y or n)");
+  if (answer[0] !== "y") break;
 }
