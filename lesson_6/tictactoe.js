@@ -80,10 +80,9 @@ function playerChoosesSquare(board) {
   board[square] = HUMAN_MARKER;
 }
 
-function findAtRiskSquare(line, board) {
+function findAtRiskSquare(line, board, marker) {
   let markersInLine = line.map((square) => board[square]);
-  let atRisk =
-    markersInLine.filter((marker) => marker === HUMAN_MARKER).length === 2;
+  let atRisk = markersInLine.filter((val) => val === marker).length === 2;
 
   if (atRisk) {
     let unusedSquare = line.find((square) => board[square] === INITIAL_MARKER);
@@ -95,17 +94,45 @@ function findAtRiskSquare(line, board) {
   return null;
 }
 
-function computerChoosesSquare(board) {
+function randomSquare(board) {
+  let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
+  return emptySquares(board)[randomIndex];
+}
+
+function defend(board) {
   let square;
   for (let index = 0; index < WINNING_LINES.length; index += 1) {
     let line = WINNING_LINES[index];
-    square = findAtRiskSquare(line, board);
+    square = findAtRiskSquare(line, board, HUMAN_MARKER);
     if (square) break;
   }
 
+  return square;
+}
+
+function attack(board) {
+  let square;
+  for (let index = 0; index < WINNING_LINES.length; index += 1) {
+    let line = WINNING_LINES[index];
+    square = findAtRiskSquare(line, board, COMPUTER_MARKER);
+    if (square) break;
+  }
+  return square;
+}
+
+function computerChoosesSquare(board) {
+  let square = attack(board);
+
   if (!square) {
-    let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
-    square = emptySquares(board)[randomIndex];
+    square = defend(board);
+  }
+
+  if (!square && board[5] === INITIAL_MARKER) {
+    square = 5;
+  }
+
+  if (!square) {
+    square = randomSquare(board);
   }
 
   board[square] = COMPUTER_MARKER;
@@ -148,7 +175,7 @@ function updateScores(scores, winner) {
   }
 }
 
-function gameWinner(scores) {
+function matchWinner(scores) {
   if (scores.player > scores.computer) {
     return "Player";
   } else if (scores.computer > scores.player) {
@@ -205,11 +232,14 @@ while (true) {
     ) {
       let answer = palyAgain("Play another game? (y or n)");
       if (answer !== "y") {
-        prompt(`${gameWinner(scores)} Won the Match!`);
+        prompt(`${matchWinner(scores)} Won the Match!`);
         break;
       }
+    } else if (matchWinner(scores)) {
+      prompt(`${matchWinner(scores)} Won the Match!`);
+      break;
     } else {
-      prompt(`${gameWinner(scores)} Won the Match!`);
+      prompt(`The match is a tie!`);
       break;
     }
   }
