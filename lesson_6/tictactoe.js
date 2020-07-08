@@ -43,11 +43,22 @@ function emptySquares(board) {
   });
 }
 
+function joinOr(array, delimeter = ", ", conjunction = "or") {
+  if (array.length === 2) {
+    return array.join(` ${conjunction} `);
+  } else if (array.length === 1) {
+    return array[0];
+  }
+
+  let lastElement = array.splice(array.length - 1, 1);
+  return `${array.join(delimeter)}${delimeter}${conjunction} ${lastElement}`;
+}
+
 function playerChoosesSquare(board) {
   let square; // declared here so we can use it outside the loop
 
   while (true) {
-    prompt(`Choose a square (${emptySquares(board).join(", ")}):`);
+    prompt(`Choose a square (${joinOr(emptySquares(board))}):`);
     square = readline.question().trim();
 
     if (emptySquares(board).includes(square)) break;
