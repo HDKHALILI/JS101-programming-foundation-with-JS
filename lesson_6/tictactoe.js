@@ -217,6 +217,22 @@ function selectPlayer() {
   return players[randomIndex];
 }
 
+function chooseSquare(board, currentPlayer) {
+  if (currentPlayer === "player") {
+    playerChoosesSquare(board);
+  } else {
+    computerChoosesSquare(board);
+  }
+}
+
+function alternatePlayer(currentPlayer) {
+  if (currentPlayer === DEFAULT_PLAYER) {
+    return "player";
+  }
+
+  return DEFAULT_PLAYER;
+}
+
 while (true) {
   let scores = {
     player: 0,
@@ -230,20 +246,9 @@ while (true) {
       displayBoard(board);
       displayScores(scores);
 
-      if (currentPlayer === "player") {
-        playerChoosesSquare(board);
-        if (someoneWon(board) || boardFull(board)) break;
-
-        computerChoosesSquare(board);
-        if (someoneWon(board) || boardFull(board)) break;
-      } else {
-        computerChoosesSquare(board);
-        displayBoard(board);
-        if (someoneWon(board) || boardFull(board)) break;
-
-        playerChoosesSquare(board);
-        if (someoneWon(board) || boardFull(board)) break;
-      }
+      chooseSquare(board, currentPlayer);
+      currentPlayer = alternatePlayer(currentPlayer);
+      if (someoneWon(board) || boardFull(board)) break;
     }
 
     displayBoard(board);
