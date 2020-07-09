@@ -193,7 +193,14 @@ function displayScores(scores) {
 
 function palyAgain(message) {
   prompt(message);
-  return readline.question().toLowerCase()[0];
+  let answer = readline.question().toLowerCase();
+  while (answer !== "y" && answer !== "n") {
+    prompt("That is an invalid response");
+    prompt(message);
+    answer = readline.question().toLowerCase();
+  }
+
+  return answer;
 }
 
 function selectPlayer() {
@@ -255,7 +262,7 @@ while (true) {
       scores.computer < WINNING_GAME_NUMBER
     ) {
       let answer = palyAgain("Play another game? (y or n)");
-      if (answer !== "y") {
+      if (answer === "n") {
         prompt(`${matchWinner(scores)} Won the Match!`);
         break;
       }
