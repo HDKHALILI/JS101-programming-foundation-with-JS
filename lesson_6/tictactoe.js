@@ -291,3 +291,16 @@ while (true) {
   let answer = palyAgain("Play another match? (y or n)");
   if (answer[0] !== "y") break;
 }
+
+// Extra features:
+
+// Minimax algorithm You can build an unbeatable Tic Tac Toe by utilizing the
+// minimax algorithm.
+
+// Bigger board What happens if the board is 5x5 instead of 3x3? What about
+// a 9x9 board? You'll have to decide for yourself the rules of the game when
+// the board isn't a 3x3 board.
+
+// More players When you have a bigger board, you can perhaps have more than
+// 2 players. Would it be interesting to play against 2 computers? What about
+// 2 human players against a computer?
