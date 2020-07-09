@@ -233,19 +233,24 @@ function alternatePlayer(currentPlayer) {
   return DEFAULT_PLAYER;
 }
 
+// match loop
 while (true) {
   let scores = {
     player: 0,
     computer: 0,
   };
+  let currentPlayer = selectPlayer();
 
+  // each game loop
   while (true) {
     let board = initialiseBoard();
-    let currentPlayer = selectPlayer();
     while (true) {
       displayBoard(board);
       displayScores(scores);
 
+      if (!currentPlayer) {
+        currentPlayer = selectPlayer();
+      }
       chooseSquare(board, currentPlayer);
       currentPlayer = alternatePlayer(currentPlayer);
       if (someoneWon(board) || boardFull(board)) break;
@@ -255,11 +260,14 @@ while (true) {
 
     if (someoneWon(board)) {
       let winner = detectWinner(board);
+      currentPlayer = winner.toLowerCase();
+      console.log(currentPlayer);
       updateScores(scores, winner);
       prompt(`${winner} won!`);
       displayScores(scores);
     } else {
       prompt("It's a tie!");
+      currentPlayer = null;
     }
 
     if (
