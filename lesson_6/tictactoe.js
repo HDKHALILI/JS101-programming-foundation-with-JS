@@ -4,6 +4,7 @@ const INITIAL_MARKER = " ";
 const HUMAN_MARKER = "X";
 const COMPUTER_MARKER = "O";
 const WINNING_GAME_NUMBER = 5;
+const DEFAULT_PLAYER = "computer";
 const WINNING_LINES = [
   [1, 2, 3],
   [4, 5, 6],
@@ -195,6 +196,20 @@ function palyAgain(message) {
   return readline.question().toLowerCase()[0];
 }
 
+function selectPlayer() {
+  prompt("Who goes first? (computer, player or choose)");
+  prompt("choose: randomly select a player");
+  let answer = readline.question().toLowerCase();
+  if (answer === "computer") {
+    return DEFAULT_PLAYER;
+  } else if (answer === "player") {
+    return "player";
+  }
+  let players = [DEFAULT_PLAYER, "player"];
+  let randomIndex = Math.floor(Math.random() * players.length);
+  return players[randomIndex];
+}
+
 while (true) {
   let scores = {
     player: 0,
@@ -203,16 +218,25 @@ while (true) {
 
   while (true) {
     let board = initialiseBoard();
-
+    let currentPlayer = selectPlayer();
     while (true) {
       displayBoard(board);
       displayScores(scores);
 
-      playerChoosesSquare(board);
-      if (someoneWon(board) || boardFull(board)) break;
+      if (currentPlayer === "player") {
+        playerChoosesSquare(board);
+        if (someoneWon(board) || boardFull(board)) break;
 
-      computerChoosesSquare(board);
-      if (someoneWon(board) || boardFull(board)) break;
+        computerChoosesSquare(board);
+        if (someoneWon(board) || boardFull(board)) break;
+      } else {
+        computerChoosesSquare(board);
+        displayBoard(board);
+        if (someoneWon(board) || boardFull(board)) break;
+
+        playerChoosesSquare(board);
+        if (someoneWon(board) || boardFull(board)) break;
+      }
     }
 
     displayBoard(board);
