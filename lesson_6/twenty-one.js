@@ -33,6 +33,15 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+function shuffle(deck) {
+  for (let index = deck.length - 1; index > 0; index -= 1) {
+    let otherIndex = Math.floor(Math.random() * (index - 1));
+    [deck[index], deck[otherIndex]] = [deck[otherIndex], deck[index]];
+  }
+
+  return deck;
+}
+
 function initialiseDeck() {
   let deck = [];
   SUITS.forEach((suit) => {
@@ -41,14 +50,7 @@ function initialiseDeck() {
     });
   });
 
-  return deck;
-}
-
-function shuffle(deck) {
-  for (let index = deck.length - 1; index > 0; index -= 1) {
-    let otherIndex = Math.floor(Math.random() * (index - 1));
-    [deck[index], deck[otherIndex]] = [deck[otherIndex], deck[index]];
-  }
+  return shuffle(deck);
 }
 
 function hit(deck) {
@@ -88,8 +90,8 @@ function total(cards) {
   return sum;
 }
 
-function busted(total) {
-  return total > 21;
+function busted(cards) {
+  return total(cards) > 21;
 }
 
 function formateCard(card) {
@@ -120,7 +122,6 @@ function getWinner(playerCards, dealerCards) {
 
 while (true) {
   let deck = initialiseDeck();
-  shuffle(deck);
 
   while (true) {
     let playerCards = dealCards(deck);
@@ -133,11 +134,11 @@ while (true) {
 
       prompt("[h]it or [s]tay");
       let answer = readline.prompt().toLowerCase();
-      if (answer === "s" || busted(total(playerCards))) break;
+      if (answer === "s" || busted(playerCards)) break;
       playerCards.push(hit(deck));
     }
 
-    if (busted(total(playerCards))) {
+    if (busted(playerCards)) {
       displayResult(playerCards, dealerCards);
       break;
     } else {
@@ -147,11 +148,11 @@ while (true) {
 
     // dealer loop
     while (true) {
-      if (busted(total(dealerCards)) || total(dealerCards) >= 17) break;
+      if (busted(dealerCards) || total(dealerCards) >= 17) break;
       dealerCards.push(hit(deck));
     }
 
-    if (busted(total(dealerCards))) {
+    if (busted(dealerCards)) {
       displayResult(playerCards, dealerCards);
       break;
     } else if (getWinner(playerCards, dealerCards)) {
@@ -177,10 +178,10 @@ function displayResult(playerCards, dealerCards) {
   prompt(
     `Dealer has: ${formateCards(dealerCards)} | Dealer total: ${dealerTotal}`
   );
-  if (busted(playerTotal)) {
+  if (busted(playerCards)) {
     prompt("You Got Busted!");
     prompt("Dealer Win!");
-  } else if (busted(dealerTotal)) {
+  } else if (busted(dealerCards)) {
     prompt("Dealer Got Busted!");
     prompt("Player Win!");
   } else if (winner) {
