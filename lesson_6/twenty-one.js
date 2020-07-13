@@ -44,7 +44,12 @@ function initialiseDeck() {
   return deck;
 }
 
-let deck = initialiseDeck();
+function shuffle(deck) {
+  for (let index = deck.length - 1; index > 0; index -= 1) {
+    let otherIndex = Math.floor(Math.random() * (index - 1));
+    [deck[index], deck[otherIndex]] = [deck[otherIndex], deck[index]];
+  }
+}
 
 function hit(deck) {
   let card = Math.floor(Math.random() * deck.length);
@@ -83,33 +88,95 @@ function total(cards) {
   return sum;
 }
 
+function busted(total) {
+  return total > 21;
+}
+
+function formateCard(card) {
+  let [name, value] = card;
+  return `[${name} ${value}] `;
+}
+
 function displayCards(cards, player) {
-  let message;
+  let message = "You have: ";
   if (player === "player") {
-    message = "Your have: ";
     cards.forEach((card) => {
-      let [name, value] = card;
-      message += `[${name} ${value}] `;
+      message += formateCard(card);
     });
   } else {
-    message = `Dealer has: [${cards[0][0]} ${cards[0][1]}] [...]`;
+    message = `Dealer has: ${formateCard(cards)} [...]`;
   }
-
   prompt(message);
 }
+
+function finalCardsDisplay(cards) {
+  let message = "";
+  cards.forEach((card) => {
+    message += formateCard(card);
+  });
+
+  return message;
+}
+
+function getWinner(playerCards, dealerCards) {
+  let playerTotal = total(playerCards);
+  let dealerTotal = total(dealerCards);
+  let winner = "";
+  if (playerTotal > dealerTotal) {
+    winner = "Player";
+  } else if (dealerTotal > playerTotal) {
+    winner = "Dealer";
+  }
+
+  return winner;
+}
+
+let deck = initialiseDeck();
+shuffle(deck);
 
 while (true) {
   let playerCards = dealCards(deck);
   let dealerCards = dealCards(deck);
-
+  let winner;
+  // player loop
   while (true) {
     displayCards(playerCards, "player");
-    displayCards(dealerCards, "player");
+    displayCards(dealerCards[0]);
 
-    prompt("[H]it or [S]tay");
+    prompt("[h]it or [s]tay");
     let answer = readline.prompt().toLowerCase();
-    if (answer === "h") {
-      playerCards.push(hit(deck));
-    }
+    if (answer === "s" || busted(total(playerCards))) break;
+    playerCards.push(hit(deck));
+  }
+
+  if (busted(total(playerCards))) {
+    prompt(`You have ${finalCardsDisplay(playerCards)}`);
+    prompt(`Dealer has: ${finalCardsDisplay(dealerCards)}`);
+    winner = "Dealer";
+    console.log("Busted!");
+    console.log(`${winner} Won!`);
+    break;
+  } else {
+    prompt("You chose to stay");
+  }
+
+  // dealer loop
+  while (true) {
+    if (busted(total(dealerCards)) || total(dealerCards) >= 17) break;
+    dealerCards.push(hit(deck));
+  }
+
+  if (busted(total(dealerCards))) {
+    prompt(`You have ${finalCardsDisplay(playerCards)}`);
+    prompt(`Dealer has: ${finalCardsDisplay(dealerCards)}`);
+    prompt("Busted!");
+    prompt("Player Win!");
+    break;
+  } else {
+    winner = getWinner(playerCards, dealerCards);
+    prompt(`You have ${finalCardsDisplay(playerCards)}`);
+    prompt(`Dealer has: ${finalCardsDisplay(dealerCards)}`);
+    console.log(`${winner} Won!`);
+    break;
   }
 }
