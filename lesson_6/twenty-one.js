@@ -10,6 +10,7 @@
 // 2 - 10     face value
 // J, Q, K    10
 // Ace        1 or 11 (first card = 11, each subsequent card is 1)
+const readline = require("readline-sync");
 const VALUES = [
   "2",
   "3",
@@ -45,33 +46,70 @@ function initialiseDeck() {
 
 let deck = initialiseDeck();
 
-function dealACard(deck) {
+function hit(deck) {
   let card = Math.floor(Math.random() * deck.length);
   return deck.splice(card, 1).flat();
 }
 
 function dealCards(deck) {
-  return [dealACard(deck), dealACard(deck)];
+  return [hit(deck), hit(deck)];
 }
 
-// display cards:
+function numberValue(value) {
+  if (value === "A") {
+    return 11;
+  } else if (["J", "K", "Q"].includes(value)) {
+    return 10;
+  } else {
+    return Number(value);
+  }
+}
+
+function getAces(cards) {
+  return cards.filter((card) => card === "A");
+}
+
+function total(cards) {
+  let values = cards.map((card) => card[1]);
+  let sum = values.reduce((total, card) => total + numberValue(card), 0);
+
+  let aces = getAces(values);
+  aces.forEach((_) => {
+    if (sum > 21) {
+      sum -= 10;
+    }
+  });
+
+  return sum;
+}
+
 function displayCards(cards, player) {
   let message;
   if (player === "player") {
-    message = "Your cards: ";
+    message = "Your have: ";
     cards.forEach((card) => {
       let [name, value] = card;
       message += `[${name} ${value}] `;
     });
   } else {
-    message = `Dealer's cards: [${cards[0][0]} ${cards[0][1]}] [...]`;
+    message = `Dealer has: [${cards[0][0]} ${cards[0][1]}] [...]`;
   }
 
   prompt(message);
 }
 
-let playersCard = dealCards(deck);
-let dealersCard = dealCards(deck);
+while (true) {
+  let playerCards = dealCards(deck);
+  let dealerCards = dealCards(deck);
 
-displayCards(playersCard, "player");
-displayCards(dealersCard, "dealer");
+  while (true) {
+    displayCards(playerCards, "player");
+    displayCards(dealerCards, "player");
+
+    prompt("[H]it or [S]tay");
+    let answer = readline.prompt().toLowerCase();
+    if (answer === "h") {
+      playerCards.push(hit(deck));
+    }
+  }
+}
