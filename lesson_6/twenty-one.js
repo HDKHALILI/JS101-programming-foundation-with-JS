@@ -94,89 +94,98 @@ function busted(total) {
 
 function formateCard(card) {
   let [name, value] = card;
-  return `[${name} ${value}] `;
+  return `[${name} ${value}]`;
 }
 
-function displayCards(cards, player) {
-  let message = "You have: ";
-  if (player === "player") {
-    cards.forEach((card) => {
-      message += formateCard(card);
-    });
-  } else {
-    message = `Dealer has: ${formateCard(cards)} [...]`;
-  }
-  prompt(message);
-}
-
-function finalCardsDisplay(cards) {
-  let message = "";
+function formateCards(cards) {
+  let result = "";
   cards.forEach((card) => {
-    message += formateCard(card);
+    result = `${result} ${formateCard(card)}`;
   });
 
-  return message;
+  return result;
 }
 
 function getWinner(playerCards, dealerCards) {
   let playerTotal = total(playerCards);
   let dealerTotal = total(dealerCards);
-  let winner = "";
   if (playerTotal > dealerTotal) {
-    winner = "Player";
+    return "Player";
   } else if (dealerTotal > playerTotal) {
-    winner = "Dealer";
+    return "Dealer";
   }
 
-  return winner;
+  return null;
 }
 
-let deck = initialiseDeck();
-shuffle(deck);
-
 while (true) {
-  let playerCards = dealCards(deck);
-  let dealerCards = dealCards(deck);
-  let winner;
-  // player loop
+  let deck = initialiseDeck();
+  shuffle(deck);
+
   while (true) {
-    displayCards(playerCards, "player");
-    displayCards(dealerCards[0]);
+    let playerCards = dealCards(deck);
+    let dealerCards = dealCards(deck);
+    // player loop
+    while (true) {
+      // console.clear();
+      prompt(`You have: ${formateCards(playerCards)}`);
+      prompt(`Dealer has: ${formateCard(dealerCards[0])} [...]`);
 
-    prompt("[h]it or [s]tay");
-    let answer = readline.prompt().toLowerCase();
-    if (answer === "s" || busted(total(playerCards))) break;
-    playerCards.push(hit(deck));
+      prompt("[h]it or [s]tay");
+      let answer = readline.prompt().toLowerCase();
+      if (answer === "s" || busted(total(playerCards))) break;
+      playerCards.push(hit(deck));
+    }
+
+    if (busted(total(playerCards))) {
+      displayResult(playerCards, dealerCards);
+      break;
+    } else {
+      // console.clear();
+      prompt("You chose to stay");
+    }
+
+    // dealer loop
+    while (true) {
+      if (busted(total(dealerCards)) || total(dealerCards) >= 17) break;
+      dealerCards.push(hit(deck));
+    }
+
+    if (busted(total(dealerCards))) {
+      displayResult(playerCards, dealerCards);
+      break;
+    } else if (getWinner(playerCards, dealerCards)) {
+      displayResult(playerCards, dealerCards);
+      break;
+    } else {
+      displayResult(playerCards, dealerCards);
+      break;
+    }
   }
 
-  if (busted(total(playerCards))) {
-    prompt(`You have ${finalCardsDisplay(playerCards)}`);
-    prompt(`Dealer has: ${finalCardsDisplay(dealerCards)}`);
-    winner = "Dealer";
-    console.log("Busted!");
-    console.log(`${winner} Won!`);
-    break;
-  } else {
-    prompt("You chose to stay");
-  }
+  prompt("Do you want to play again? [y/n]");
+  let answer = readline.prompt().toLowerCase();
+  if (answer === "n") break;
+}
 
-  // dealer loop
-  while (true) {
-    if (busted(total(dealerCards)) || total(dealerCards) >= 17) break;
-    dealerCards.push(hit(deck));
-  }
+function displayResult(playerCards, dealerCards) {
+  let winner = getWinner(playerCards, dealerCards);
+  let playerTotal = total(playerCards);
+  let dealerTotal = total(dealerCards);
 
-  if (busted(total(dealerCards))) {
-    prompt(`You have ${finalCardsDisplay(playerCards)}`);
-    prompt(`Dealer has: ${finalCardsDisplay(dealerCards)}`);
-    prompt("Busted!");
+  prompt(`You have: ${formateCards(playerCards)} | Your total: ${playerTotal}`);
+  prompt(
+    `Dealer has: ${formateCards(dealerCards)} | Dealer total: ${dealerTotal}`
+  );
+  if (busted(playerTotal)) {
+    prompt("You Got Busted!");
+    prompt("Dealer Win!");
+  } else if (busted(dealerTotal)) {
+    prompt("Dealer Got Busted!");
     prompt("Player Win!");
-    break;
+  } else if (winner) {
+    prompt(`${winner} Win!!`);
   } else {
-    winner = getWinner(playerCards, dealerCards);
-    prompt(`You have ${finalCardsDisplay(playerCards)}`);
-    prompt(`Dealer has: ${finalCardsDisplay(dealerCards)}`);
-    console.log(`${winner} Won!`);
-    break;
+    prompt("It is a tie!");
   }
 }
