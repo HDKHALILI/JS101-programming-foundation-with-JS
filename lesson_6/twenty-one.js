@@ -4,6 +4,7 @@
 // hit: get another card
 // stay: next player's turn
 // bust: game lost
+// deal card: give each player two cards at random
 
 // Card:      Value:
 // 2 - 10     face value
@@ -27,6 +28,10 @@ const VALUES = [
 
 const SUITS = ["H", "D", "C", "S"];
 
+function prompt(message) {
+  console.log(`=> ${message}`);
+}
+
 function initialiseDeck() {
   let deck = [];
   SUITS.forEach((suit) => {
@@ -39,4 +44,34 @@ function initialiseDeck() {
 }
 
 let deck = initialiseDeck();
-console.log(deck.length);
+
+function dealACard(deck) {
+  let card = Math.floor(Math.random() * deck.length);
+  return deck.splice(card, 1).flat();
+}
+
+function dealCards(deck) {
+  return [dealACard(deck), dealACard(deck)];
+}
+
+// display cards:
+function displayCards(cards, player) {
+  let message;
+  if (player === "player") {
+    message = "Your cards: ";
+    cards.forEach((card) => {
+      let [name, value] = card;
+      message += `[${name} ${value}] `;
+    });
+  } else {
+    message = `Dealer's cards: [${cards[0][0]} ${cards[0][1]}] [...]`;
+  }
+
+  prompt(message);
+}
+
+let playersCard = dealCards(deck);
+let dealersCard = dealCards(deck);
+
+displayCards(playersCard, "player");
+displayCards(dealersCard, "dealer");
