@@ -178,7 +178,11 @@ function hitOrStay() {
 function playAgain() {
   banneriseNoPadd("Do you want to play again? (y or n)");
   let answer = readline.prompt().toLowerCase();
-  return answer.toLowerCase()[0] === "y";
+  while (!["y", "n"].includes(answer)) {
+    prompt("Invalid input, please enter 'y' or 'n'");
+    answer = readline.prompt().toLowerCase();
+  }
+  return answer;
 }
 
 function displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal) {
@@ -216,7 +220,7 @@ while (true) {
   if (busted(playerTotal)) {
     displayResults(playerTotal, dealerTotal);
     displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
-    if (playAgain()) {
+    if (playAgain() === "y") {
       continue;
     } else {
       break;
@@ -239,7 +243,7 @@ while (true) {
   if (busted(dealerTotal)) {
     displayResults(playerTotal, dealerTotal);
     displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
-    if (playAgain()) {
+    if (playAgain() === "y") {
       continue;
     } else {
       break;
@@ -251,6 +255,6 @@ while (true) {
   displayResults(playerTotal, dealerTotal);
   displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
 
-  if (!playAgain()) break;
+  if (playAgain() === "n") break;
   console.clear();
 }
