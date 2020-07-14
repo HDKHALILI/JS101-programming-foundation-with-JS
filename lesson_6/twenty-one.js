@@ -11,6 +11,8 @@
 // J, Q, K    10
 // Ace        1 or 11 (first card = 11, each subsequent card is 1)
 const readline = require("readline-sync");
+const GAME_MAX = 21;
+const DEALER_MAX = 17;
 const VALUES = [
   "2",
   "3",
@@ -105,7 +107,7 @@ function total(cards) {
 
   let aces = getAces(values);
   aces.forEach((_) => {
-    if (sum > 21) {
+    if (sum > GAME_MAX) {
       sum -= 10;
     }
   });
@@ -114,7 +116,7 @@ function total(cards) {
 }
 
 function busted(total) {
-  return total > 21;
+  return total > GAME_MAX;
 }
 
 function formateCard(card) {
@@ -227,7 +229,7 @@ while (true) {
   // dealer loop
   prompt("Dealer's turn");
 
-  while (total(dealerCards) < 17) {
+  while (total(dealerCards) < DEALER_MAX) {
     prompt("Dealer hits");
     dealerCards.push(hit(deck));
     dealerTotal = total(dealerCards);
