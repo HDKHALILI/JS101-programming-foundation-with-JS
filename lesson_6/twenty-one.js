@@ -202,6 +202,7 @@ while (true) {
     let move = hitOrStay();
     if (move === "h") {
       console.clear();
+      prompt("You chose to hit");
       playerCards.push(hit(deck));
       playerTotal = total(playerCards);
       prompt(`You now have: ${hand(playerCards)}, new total: ${playerTotal}`);
@@ -211,14 +212,15 @@ while (true) {
   }
 
   if (busted(playerTotal)) {
-    displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
     displayResults(playerTotal, dealerTotal);
+    displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
     if (playAgain()) {
       continue;
     } else {
       break;
     }
   } else {
+    console.clear();
     prompt(`You stayed at ${playerTotal}`);
   }
 
@@ -233,9 +235,8 @@ while (true) {
   }
 
   if (busted(dealerTotal)) {
-    // prompt(`Dealer total: ${dealerTotal}`);
-    displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
     displayResults(playerTotal, dealerTotal);
+    displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
     if (playAgain()) {
       continue;
     } else {
@@ -245,8 +246,8 @@ while (true) {
     prompt(`Dealer stays at ${dealerTotal}`);
   }
 
-  displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
   displayResults(playerTotal, dealerTotal);
+  displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
 
   if (!playAgain()) break;
   console.clear();
