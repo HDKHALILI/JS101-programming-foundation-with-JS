@@ -99,94 +99,143 @@ function formateCard(card) {
   return `[${name} ${value}]`;
 }
 
-function formateCards(cards) {
-  let result = "";
-  cards.forEach((card) => {
-    result = `${result} ${formateCard(card)}`;
-  });
-
-  return result;
+function hand(cards) {
+  return cards.map((card) => formateCard(card)).join(" ");
 }
 
-function getWinner(playerCards, dealerCards) {
+function detectResult(playerCards, dealerCards) {
   let playerTotal = total(playerCards);
   let dealerTotal = total(dealerCards);
-  if (playerTotal > dealerTotal) {
-    return "Player";
+
+  if (busted(playerCards)) {
+    return "PLAYER_BUSTED";
+  } else if (busted(playerCards)) {
+    return "DEALER_BUSTED";
+  } else if (dealerTotal < playerTotal) {
+    return "PLAYER";
   } else if (dealerTotal > playerTotal) {
-    return "Dealer";
+    return "DEALER";
+  } else {
+    return "TIE";
+  }
+}
+
+function displayResults(playerCards, dealerCards) {
+  let result = detectResult(playerCards, dealerCards);
+
+  switch (result) {
+    case "PLAYER_BUSTED":
+      bannerise("You Busted! Dealer Wins!");
+      break;
+    case "DEALER_BUSTED":
+      bannerise("Dealer Busted! You Win!");
+      break;
+    case "PLAYER":
+      bannerise("You Win!");
+      break;
+    case "DEALER":
+      bannerise("Dealer Win!");
+      break;
+    case "TIE":
+      bannerise("It's a Tie!");
+  }
+}
+
+function hitOrStay() {
+  prompt("Would you like to (h)it or (s)tay?");
+  let answer;
+  while (true) {
+    answer = readline.prompt().toLowerCase();
+    if (["s", "h"].includes(answer)) break;
+    prompt("Invalid! please enter 'h' or 's'");
   }
 
-  return null;
+  return answer;
+}
+
+function playAgain() {
+  banneriseNoPadd("Do you want to play again? (y or n)");
+  let answer = readline.prompt().toLowerCase();
+  return answer.toLowerCase()[0] === "y";
 }
 
 while (true) {
+  bannerise("Welcome to Twenty One!");
+
   let deck = initialiseDeck();
-
+  let playerCards = dealCards(deck);
+  let dealerCards = dealCards(deck);
+  // console.clear();
+  prompt(`You have: ${hand(playerCards)}, total: ${total(playerCards)}`);
+  prompt(`Dealer has: ${formateCard(dealerCards[0])} [?]`);
+  // player loop
   while (true) {
-    let playerCards = dealCards(deck);
-    let dealerCards = dealCards(deck);
-    // player loop
-    while (true) {
-      // console.clear();
-      prompt(`You have: ${formateCards(playerCards)}`);
-      prompt(`Dealer has: ${formateCard(dealerCards[0])} [...]`);
-
-      prompt("[h]it or [s]tay");
-      let answer = readline.prompt().toLowerCase();
-      if (answer === "s" || busted(playerCards)) break;
+    let move = hitOrStay();
+    if (move === "h") {
       playerCards.push(hit(deck));
+      prompt(`You now have: ${hand(playerCards)}`);
+      prompt(`Your current total: ${total(playerCards)}`);
     }
 
-    if (busted(playerCards)) {
-      displayResult(playerCards, dealerCards);
-      break;
-    } else {
-      // console.clear();
-      prompt("You chose to stay");
-    }
-
-    // dealer loop
-    while (true) {
-      if (busted(dealerCards) || total(dealerCards) >= 17) break;
-      dealerCards.push(hit(deck));
-    }
-
-    if (busted(dealerCards)) {
-      displayResult(playerCards, dealerCards);
-      break;
-    } else if (getWinner(playerCards, dealerCards)) {
-      displayResult(playerCards, dealerCards);
-      break;
-    } else {
-      displayResult(playerCards, dealerCards);
-      break;
-    }
+    if (move === "s" || busted(playerCards)) break;
   }
 
-  prompt("Do you want to play again? [y/n]");
-  let answer = readline.prompt().toLowerCase();
-  if (answer === "n") break;
+  if (busted(playerCards)) {
+    displayResults(playerCards, dealerCards);
+    if (playAgain()) {
+      continue;
+    } else {
+      break;
+    }
+  } else {
+    // console.clear();
+    prompt(`You stayed at ${total(playerCards)}`);
+  }
+
+  // dealer loop
+  prompt("Dealer's turn");
+
+  while (total(dealerCards) < 17) {
+    prompt("Dealer hits");
+    dealerCards.push(hit(deck));
+    prompt(`Dealer now has: ${hand(dealerCards)}`);
+  }
+
+  if (busted(dealerCards)) {
+    prompt(`Dealer total: ${total(dealerCards)}`);
+    displayResults(playerCards, dealerCards);
+    break;
+  } else {
+    prompt(`Dealer stays at ${total(dealerCards)}`);
+  }
+
+  banneriseNoPadd(`Dealer has ${dealerCards}, total: ${total(dealerCards)}`);
+  banneriseNoPadd(`Player has ${playerCards}, total: ${total(playerCards)}`);
+
+  displayResults(playerCards, dealerCards);
+
+  if (!playAgain()) break;
 }
 
-function displayResult(playerCards, dealerCards) {
-  let winner = getWinner(playerCards, dealerCards);
-  let playerTotal = total(playerCards);
-  let dealerTotal = total(dealerCards);
+function bannerise(message, size) {
+  let boxLength = size ? size + 2 : message.length + 2;
+  let horizontalLine = `+${"-".repeat(boxLength)}+`;
+  let emptyLine = `|${" ".repeat(boxLength)}|`;
+  let messageLine = `| ${message.slice(0, size)} |`;
 
-  prompt(`You have: ${formateCards(playerCards)} | Your total: ${playerTotal}`);
-  prompt(
-    `Dealer has: ${formateCards(dealerCards)} | Dealer total: ${dealerTotal}`
-  );
-  if (busted(playerCards)) {
-    prompt("You Got Busted!");
-    prompt("Dealer Win!");
-  } else if (busted(dealerCards)) {
-    prompt("Dealer Got Busted!");
-    prompt("Player Win!");
-  } else if (winner) {
-    prompt(`${winner} Win!!`);
-  } else {
-    prompt("It is a tie!");
-  }
+  console.log(horizontalLine);
+  console.log(emptyLine);
+  console.log(messageLine);
+  console.log(emptyLine);
+  console.log(horizontalLine);
+}
+
+function banneriseNoPadd(message, size) {
+  let boxLength = size ? size + 2 : message.length + 2;
+  let horizontalLine = `+${"-".repeat(boxLength)}+`;
+  let messageLine = `| ${message.slice(0, size)} |`;
+
+  console.log(horizontalLine);
+  console.log(messageLine);
+  console.log(horizontalLine);
 }
