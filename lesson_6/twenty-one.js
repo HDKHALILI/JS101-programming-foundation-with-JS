@@ -179,7 +179,13 @@ function playAgain() {
   return answer.toLowerCase()[0] === "y";
 }
 
+function displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal) {
+  banneriseNoPadd(`Dealer has ${hand(dealerCards)}, total: ${playerTotal}`);
+  banneriseNoPadd(`Player has ${hand(playerCards)}, total: ${dealerTotal}`);
+}
+
 while (true) {
+  console.clear();
   bannerise("Welcome to Twenty One!");
 
   let deck = initialiseDeck();
@@ -205,6 +211,7 @@ while (true) {
   }
 
   if (busted(playerTotal)) {
+    displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
     displayResults(playerTotal, dealerTotal);
     if (playAgain()) {
       continue;
@@ -226,7 +233,8 @@ while (true) {
   }
 
   if (busted(dealerTotal)) {
-    prompt(`Dealer total: ${dealerTotal}`);
+    // prompt(`Dealer total: ${dealerTotal}`);
+    displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
     displayResults(playerTotal, dealerTotal);
     if (playAgain()) {
       continue;
@@ -237,9 +245,7 @@ while (true) {
     prompt(`Dealer stays at ${dealerTotal}`);
   }
 
-  banneriseNoPadd(`Dealer has ${hand(dealerCards)}, total: ${playerTotal}`);
-  banneriseNoPadd(`Player has ${hand(playerCards)}, total: ${dealerTotal}`);
-
+  displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
   displayResults(playerTotal, dealerTotal);
 
   if (!playAgain()) break;
