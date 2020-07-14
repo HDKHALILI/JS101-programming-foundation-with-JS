@@ -33,6 +33,29 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+function bannerise(message, size) {
+  let boxLength = size ? size + 2 : message.length + 2;
+  let horizontalLine = `+${"-".repeat(boxLength)}+`;
+  let emptyLine = `|${" ".repeat(boxLength)}|`;
+  let messageLine = `| ${message.slice(0, size)} |`;
+
+  console.log(horizontalLine);
+  console.log(emptyLine);
+  console.log(messageLine);
+  console.log(emptyLine);
+  console.log(horizontalLine);
+}
+
+function banneriseNoPadd(message, size) {
+  let boxLength = size ? size + 2 : message.length + 2;
+  let horizontalLine = `+${"-".repeat(boxLength)}+`;
+  let messageLine = `| ${message.slice(0, size)} |`;
+
+  console.log(horizontalLine);
+  console.log(messageLine);
+  console.log(horizontalLine);
+}
+
 function shuffle(deck) {
   for (let index = deck.length - 1; index > 0; index -= 1) {
     let otherIndex = Math.floor(Math.random() * (index - 1));
@@ -109,7 +132,7 @@ function detectResult(playerCards, dealerCards) {
 
   if (busted(playerCards)) {
     return "PLAYER_BUSTED";
-  } else if (busted(playerCards)) {
+  } else if (busted(dealerCards)) {
     return "DEALER_BUSTED";
   } else if (dealerTotal < playerTotal) {
     return "PLAYER";
@@ -165,16 +188,19 @@ while (true) {
   let deck = initialiseDeck();
   let playerCards = dealCards(deck);
   let dealerCards = dealCards(deck);
-  // console.clear();
+
   prompt(`You have: ${hand(playerCards)}, total: ${total(playerCards)}`);
   prompt(`Dealer has: ${formateCard(dealerCards[0])} [?]`);
+
   // player loop
   while (true) {
     let move = hitOrStay();
     if (move === "h") {
+      console.clear();
       playerCards.push(hit(deck));
-      prompt(`You now have: ${hand(playerCards)}`);
-      prompt(`Your current total: ${total(playerCards)}`);
+      prompt(
+        `You now have: ${hand(playerCards)}, new total: ${total(playerCards)}`
+      );
     }
 
     if (move === "s" || busted(playerCards)) break;
@@ -188,7 +214,6 @@ while (true) {
       break;
     }
   } else {
-    // console.clear();
     prompt(`You stayed at ${total(playerCards)}`);
   }
 
@@ -204,7 +229,11 @@ while (true) {
   if (busted(dealerCards)) {
     prompt(`Dealer total: ${total(dealerCards)}`);
     displayResults(playerCards, dealerCards);
-    break;
+    if (playAgain()) {
+      continue;
+    } else {
+      break;
+    }
   } else {
     prompt(`Dealer stays at ${total(dealerCards)}`);
   }
@@ -215,27 +244,5 @@ while (true) {
   displayResults(playerCards, dealerCards);
 
   if (!playAgain()) break;
-}
-
-function bannerise(message, size) {
-  let boxLength = size ? size + 2 : message.length + 2;
-  let horizontalLine = `+${"-".repeat(boxLength)}+`;
-  let emptyLine = `|${" ".repeat(boxLength)}|`;
-  let messageLine = `| ${message.slice(0, size)} |`;
-
-  console.log(horizontalLine);
-  console.log(emptyLine);
-  console.log(messageLine);
-  console.log(emptyLine);
-  console.log(horizontalLine);
-}
-
-function banneriseNoPadd(message, size) {
-  let boxLength = size ? size + 2 : message.length + 2;
-  let horizontalLine = `+${"-".repeat(boxLength)}+`;
-  let messageLine = `| ${message.slice(0, size)} |`;
-
-  console.log(horizontalLine);
-  console.log(messageLine);
-  console.log(horizontalLine);
+  console.clear();
 }
