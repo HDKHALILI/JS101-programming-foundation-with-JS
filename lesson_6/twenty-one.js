@@ -13,6 +13,7 @@
 const readline = require("readline-sync");
 const GAME_MAX = 21;
 const DEALER_MAX = 17;
+const WINNING_GAME_NUMBER = 5;
 const VALUES = [
   "2",
   "3",
@@ -163,6 +164,24 @@ function displayResults(playerTotal, dealerTotal) {
   }
 }
 
+function updateScores(scores, playerTotal, dealerTotal) {
+  let result = detectResult(playerTotal, dealerTotal);
+  switch (result) {
+    case "PLAYER_BUSTED":
+      scores.dealer += 1;
+      break;
+    case "DEALER_BUSTED":
+      scores.player += 1;
+      break;
+    case "PLAYER":
+      scores.player += 1;
+      break;
+    case "DEALER":
+      scores.dealer += 1;
+      break;
+  }
+}
+
 function hitOrStay() {
   prompt("Would you like to (h)it or (s)tay?");
   let answer;
@@ -175,8 +194,8 @@ function hitOrStay() {
   return answer;
 }
 
-function playAgain() {
-  banneriseNoPadd("Do you want to play again? (y or n)");
+function playAgain(message) {
+  banneriseNoPadd(message);
   let answer = readline.prompt().toLowerCase();
   while (!["y", "n"].includes(answer)) {
     prompt("Invalid input, please enter 'y' or 'n'");
@@ -190,71 +209,112 @@ function displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal) {
   banneriseNoPadd(`Player has ${hand(playerCards)}, total: ${dealerTotal}`);
 }
 
+function getMatchWinner(scores) {
+  if (scores.player >= WINNING_GAME_NUMBER) {
+    return "Player";
+  } else if (scores.dealer >= WINNING_GAME_NUMBER) {
+    return "Dealer";
+  }
+
+  return null;
+}
+
+function displayScores(scores) {
+  bannerise(`Player Score: ${scores.player}, Dealer Score: ${scores.dealer}`);
+}
+
 while (true) {
-  console.clear();
-  bannerise("Welcome to Twenty One!");
+  let scores = {
+    player: 0,
+    dealer: 0,
+  };
 
-  let deck = initialiseDeck();
-  let playerCards = dealCards(deck);
-  let dealerCards = dealCards(deck);
-  let playerTotal = total(playerCards);
-  let dealerTotal = total(dealerCards);
-
-  prompt(`You have: ${hand(playerCards)}, total: ${playerTotal}`);
-  prompt(`Dealer has: ${formateCard(dealerCards[0])} [?]`);
-
-  // player loop
   while (true) {
-    let move = hitOrStay();
-    if (move === "h") {
-      console.clear();
-      prompt("You chose to hit");
-      playerCards.push(hit(deck));
-      playerTotal = total(playerCards);
-      prompt(`You now have: ${hand(playerCards)}, new total: ${playerTotal}`);
-    }
-
-    if (move === "s" || busted(playerTotal)) break;
-  }
-
-  if (busted(playerTotal)) {
-    displayResults(playerTotal, dealerTotal);
-    displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
-    if (playAgain() === "y") {
-      continue;
-    } else {
-      break;
-    }
-  } else {
     console.clear();
-    prompt(`You stayed at ${playerTotal}`);
-  }
+    bannerise("Welcome to Twenty One!");
 
-  // dealer loop
-  prompt("Dealer's turn");
+    let deck = initialiseDeck();
+    let playerCards = dealCards(deck);
+    let dealerCards = dealCards(deck);
+    let playerTotal = total(playerCards);
+    let dealerTotal = total(dealerCards);
 
-  while (total(dealerCards) < DEALER_MAX) {
-    prompt("Dealer hits");
-    dealerCards.push(hit(deck));
-    dealerTotal = total(dealerCards);
-    prompt(`Dealer now has: ${hand(dealerCards)}`);
-  }
+    prompt(`You have: ${hand(playerCards)}, total: ${playerTotal}`);
+    prompt(`Dealer has: ${formateCard(dealerCards[0])} [?]`);
 
-  if (busted(dealerTotal)) {
+    // player loop
+    while (true) {
+      let move = hitOrStay();
+      if (move === "h") {
+        console.clear();
+        prompt("You chose to hit");
+        playerCards.push(hit(deck));
+        playerTotal = total(playerCards);
+        prompt(`You now have: ${hand(playerCards)}, new total: ${playerTotal}`);
+      }
+
+      if (move === "s" || busted(playerTotal)) break;
+    }
+
+    if (busted(playerTotal)) {
+      displayResults(playerTotal, dealerTotal);
+      displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
+
+      updateScores(scores, playerTotal, dealerTotal);
+      displayScores(scores);
+
+      if (getMatchWinner(scores)) break;
+
+      if (playAgain("Do you want to play another game? (y or n)") === "y") {
+        continue;
+      } else {
+        break;
+      }
+    } else {
+      console.clear();
+      prompt(`You stayed at ${playerTotal}`);
+    }
+
+    // dealer loop
+    prompt("Dealer's turn");
+
+    while (total(dealerCards) < DEALER_MAX) {
+      prompt("Dealer hits");
+      dealerCards.push(hit(deck));
+      dealerTotal = total(dealerCards);
+      prompt(`Dealer now has: ${hand(dealerCards)}`);
+    }
+
+    if (busted(dealerTotal)) {
+      displayResults(playerTotal, dealerTotal);
+      displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
+
+      updateScores(scores, playerTotal, dealerTotal);
+      displayScores(scores);
+
+      if (getMatchWinner(scores)) break;
+
+      if (playAgain("Do you want to play another game? (y or n)") === "y") {
+        continue;
+      } else {
+        break;
+      }
+    } else {
+      prompt(`Dealer stays at ${dealerTotal}`);
+    }
+
     displayResults(playerTotal, dealerTotal);
     displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
-    if (playAgain() === "y") {
-      continue;
-    } else {
-      break;
-    }
-  } else {
-    prompt(`Dealer stays at ${dealerTotal}`);
+
+    updateScores(scores, playerTotal, dealerTotal);
+    displayScores(scores);
+
+    if (getMatchWinner(scores)) break;
+
+    if (playAgain("Do you want to play another game? (y or n)") === "n") break;
+    console.clear();
   }
 
-  displayResults(playerTotal, dealerTotal);
-  displayEndOfRound(playerCards, playerTotal, dealerCards, dealerTotal);
-
-  if (playAgain() === "n") break;
-  console.clear();
+  bannerise(`${getMatchWinner(scores)} Wins the Match!`);
+  if (playAgain("Do you want to play another match? (y or n)") === "n") break;
 }
