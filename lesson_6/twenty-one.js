@@ -113,8 +113,8 @@ function total(cards) {
   return sum;
 }
 
-function busted(cards) {
-  return total(cards) > 21;
+function busted(total) {
+  return total > 21;
 }
 
 function formateCard(card) {
@@ -126,13 +126,10 @@ function hand(cards) {
   return cards.map((card) => formateCard(card)).join(" ");
 }
 
-function detectResult(playerCards, dealerCards) {
-  let playerTotal = total(playerCards);
-  let dealerTotal = total(dealerCards);
-
-  if (busted(playerCards)) {
+function detectResult(playerTotal, dealerTotal) {
+  if (busted(playerTotal)) {
     return "PLAYER_BUSTED";
-  } else if (busted(dealerCards)) {
+  } else if (busted(dealerTotal)) {
     return "DEALER_BUSTED";
   } else if (dealerTotal < playerTotal) {
     return "PLAYER";
@@ -143,8 +140,8 @@ function detectResult(playerCards, dealerCards) {
   }
 }
 
-function displayResults(playerCards, dealerCards) {
-  let result = detectResult(playerCards, dealerCards);
+function displayResults(playerTotal, dealerTotal) {
+  let result = detectResult(playerTotal, dealerTotal);
 
   switch (result) {
     case "PLAYER_BUSTED":
@@ -188,8 +185,10 @@ while (true) {
   let deck = initialiseDeck();
   let playerCards = dealCards(deck);
   let dealerCards = dealCards(deck);
+  let playerTotal = total(playerCards);
+  let dealerTotal = total(dealerCards);
 
-  prompt(`You have: ${hand(playerCards)}, total: ${total(playerCards)}`);
+  prompt(`You have: ${hand(playerCards)}, total: ${playerTotal}`);
   prompt(`Dealer has: ${formateCard(dealerCards[0])} [?]`);
 
   // player loop
@@ -198,23 +197,22 @@ while (true) {
     if (move === "h") {
       console.clear();
       playerCards.push(hit(deck));
-      prompt(
-        `You now have: ${hand(playerCards)}, new total: ${total(playerCards)}`
-      );
+      playerTotal = total(playerCards);
+      prompt(`You now have: ${hand(playerCards)}, new total: ${playerTotal}`);
     }
 
-    if (move === "s" || busted(playerCards)) break;
+    if (move === "s" || busted(playerTotal)) break;
   }
 
-  if (busted(playerCards)) {
-    displayResults(playerCards, dealerCards);
+  if (busted(playerTotal)) {
+    displayResults(playerTotal, dealerTotal);
     if (playAgain()) {
       continue;
     } else {
       break;
     }
   } else {
-    prompt(`You stayed at ${total(playerCards)}`);
+    prompt(`You stayed at ${playerTotal}`);
   }
 
   // dealer loop
@@ -223,25 +221,26 @@ while (true) {
   while (total(dealerCards) < 17) {
     prompt("Dealer hits");
     dealerCards.push(hit(deck));
+    dealerTotal = total(dealerCards);
     prompt(`Dealer now has: ${hand(dealerCards)}`);
   }
 
-  if (busted(dealerCards)) {
-    prompt(`Dealer total: ${total(dealerCards)}`);
-    displayResults(playerCards, dealerCards);
+  if (busted(dealerTotal)) {
+    prompt(`Dealer total: ${dealerTotal}`);
+    displayResults(playerTotal, dealerTotal);
     if (playAgain()) {
       continue;
     } else {
       break;
     }
   } else {
-    prompt(`Dealer stays at ${total(dealerCards)}`);
+    prompt(`Dealer stays at ${dealerTotal}`);
   }
 
-  banneriseNoPadd(`Dealer has ${dealerCards}, total: ${total(dealerCards)}`);
-  banneriseNoPadd(`Player has ${playerCards}, total: ${total(playerCards)}`);
+  banneriseNoPadd(`Dealer has ${hand(dealerCards)}, total: ${playerTotal}`);
+  banneriseNoPadd(`Player has ${hand(playerCards)}, total: ${dealerTotal}`);
 
-  displayResults(playerCards, dealerCards);
+  displayResults(playerTotal, dealerTotal);
 
   if (!playAgain()) break;
   console.clear();
